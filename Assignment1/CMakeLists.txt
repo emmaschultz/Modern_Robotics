@@ -15,9 +15,9 @@ catkin_simple()
 # cs_add_library(my_lib src/my_lib.cpp)   
 
 # Executables
-cs_add_executable(velocity_controller src/Modern_Robotics/Assignment1/src/velocity_controller.cpp)
-cs_add_executable(velocity_commander src/Modern_Robotics/Assignment1/src/velocity_commander.cpp)
-cs_add_executable(velocity_simulator src/Modern_Robotics/Assignment1/src/velocity_simulator.cpp)
+cs_add_executable(velocity_controller src/velocity_controller.cpp)
+cs_add_executable(velocity_commander src/velocity_commander.cpp)
+cs_add_executable(velocity_simulator src/velocity_simulator.cpp)
 # target_link_libraries(example my_lib)
 
 cs_install()
