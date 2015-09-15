@@ -15,7 +15,7 @@ void myCallback(const std_msgs::Float64& message_holder) {
 }
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "minimal_simulator"); //name this node 
+    ros::init(argc, argv, "velocity_simulator"); //name this node 
     // when this compiled code is run, ROS will recognize it as a node called "minimal_simulator" 
     ros::NodeHandle nh; // node handle 
     //create a Subscriber object and have it subscribe to the topic "force_cmd" 
@@ -38,5 +38,5 @@ int main(int argc, char **argv) {
         // the update rate of the 10Hz controller that specifies force_cmd 
         // however, simulator must advance each 10ms regardless 
     }
-    return 0; // should never get here, unless roscore dies 
+    return 0; // should never get here, unless roscore dies
 } 

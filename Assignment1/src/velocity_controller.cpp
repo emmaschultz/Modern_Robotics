@@ -24,7 +24,7 @@ void myCallbackVelCmd(const std_msgs::Float64& message_holder) {
 }
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "minimal_controller"); //name this node 
+    ros::init(argc, argv, "velocity_controller"); //name this node 
     // when this compiled code is run, ROS will recognize it as a node called "minimal_controller" 
     ros::NodeHandle nh; // node handle 
     //create 2 subscribers: one for state sensing (velocity) and one for velocity commands 
