@@ -15,7 +15,7 @@ catkin_simple()
 # cs_add_library(my_lib src/my_lib.cpp)   
 
 # Executables
-cs_add_executable(amplitude_frequency_server src/amplitude_frequency_server.cpp)
+cs_add_executable(amplitude_frequency_client src/amplitude_frequency_client.cpp)
 cs_add_executable(velocity_commander src/velocity_commander.cpp)
 cs_add_executable(velocity_controller src/velocity_controller.cpp)
 cs_add_executable(velocity_simulator src/velocity_simulator.cpp)
