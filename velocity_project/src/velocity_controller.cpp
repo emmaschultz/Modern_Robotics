@@ -2,8 +2,8 @@
 // wsn example node that both subscribes and publishes--counterpart to minimal_simulator 
 // subscribes to "velocity" and publishes "force_cmd" 
 // subscribes to "vel_cmd" 
-#include<ros/ros.h> 
-#include<std_msgs/Float64.h> 
+#include <ros/ros.h> 
+#include <std_msgs/Float64.h> 
 //global variables for callback functions to populate for use in main program 
 std_msgs::Float64 g_velocity;
 std_msgs::Float64 g_vel_cmd;

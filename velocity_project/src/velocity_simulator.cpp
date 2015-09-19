@@ -2,8 +2,8 @@
 // wsn example node that both subscribes and publishes 
 // does trivial system simulation, F=ma, to update velocity given F specified on topic "force_cmd" 
 // publishes velocity on topic "velocity" 
-#include<ros/ros.h> 
-#include<std_msgs/Float64.h> 
+#include <ros/ros.h> 
+#include <std_msgs/Float64.h> 
 std_msgs::Float64 g_velocity;
 std_msgs::Float64 g_force;
 
