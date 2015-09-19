@@ -10,8 +10,7 @@ std_msgs::Float64 g_force;
 void myCallback(const std_msgs::Float64& message_holder) {
     // checks for messages on topic "force_cmd" 
     ROS_INFO("received force value is: %f", message_holder.data);
-    g_force.data = message_holder.data; // post the received data in a global var for access by 
-    // main prog. 
+    g_force.data = message_holder.data; // post the received data in a global var for access by main prog. 
 }
 
 int main(int argc, char **argv) {
@@ -29,8 +28,7 @@ int main(int argc, char **argv) {
     g_velocity.data = 0.0; //initialize velocity to zero 
     g_force.data = 0.0; // initialize force to 0; will get updated by callback 
     while (ros::ok()) {
-        g_velocity.data = g_velocity.data + (g_force.data / mass) * dt; // Euler integration of 
-        //acceleration 
+        g_velocity.data = g_velocity.data + (g_force.data / mass) * dt; // Euler integration of acceleration 
         my_publisher_object.publish(g_velocity); // publish the system state (trivial--1-D) 
         ROS_INFO("velocity = %f", g_velocity.data);
         ros::spinOnce(); //allow data update from callback 

@@ -12,15 +12,13 @@ std_msgs::Float64 g_force; // this one does not need to be global...
 void myCallbackVelocity(const std_msgs::Float64& message_holder) {
     // check for data on topic "velocity" 
     ROS_INFO("received velocity value is: %f", message_holder.data);
-    g_velocity.data = message_holder.data; // post the received data in a global var for access by 
-    //main prog. 
+    g_velocity.data = message_holder.data; // post the received data in a global var for access by main prog. 
 }
 
 void myCallbackVelCmd(const std_msgs::Float64& message_holder) {
     // check for data on topic "vel_cmd" 
     ROS_INFO("received velocity command value is: %f", message_holder.data);
-    g_vel_cmd.data = message_holder.data; // post the received data in a global var for access by 
-    //main prog. 
+    g_vel_cmd.data = message_holder.data; // post the received data in a global var for access by main prog. 
 }
 
 int main(int argc, char **argv) {
@@ -33,24 +31,20 @@ int main(int argc, char **argv) {
     //publish a force command computed by this controller; 
     ros::Publisher my_publisher_object = nh.advertise<std_msgs::Float64>("force_cmd", 1);
     double Kv = 1.0; // velocity feedback gain 
-    double dt_controller = 0.1; //specify 10Hz controller sample rate (pretty slow, but 
-    //illustrative) 
+    double dt_controller = 0.1; //specify 10Hz controller sample rate (pretty slow, but illustrative) 
     double sample_rate = 1.0 / dt_controller; // compute the corresponding update frequency 
     ros::Rate naptime(sample_rate); // use to regulate loop rate 
     g_velocity.data = 0.0; //initialize velocity to zero 
     g_force.data = 0.0; // initialize force to 0; will get updated by callback 
     g_vel_cmd.data = 0.0; // init velocity command to zero 
-    double vel_err = 0.0; // velocity error 
+    double vel_err = 0.0; // velocity error
     // enter the main loop: get velocity state and velocity commands 
     // compute command force to get system velocity to match velocity command 
     // publish this force for use by the complementary simulator 
     while (ros::ok()) {
-        vel_err = g_vel_cmd.data - g_velocity.data; // compute error btwn desired and actual 
-        //velocities 
-        g_force.data = Kv*vel_err; //proportional-only velocity-error feedback defines commanded 
-        //force 
-        my_publisher_object.publish(g_force); // publish the control effort computed by this 
-        //controller 
+        vel_err = g_vel_cmd.data - g_velocity.data; // compute error btwn desired and actual velocities 
+        g_force.data = Kv*vel_err; //proportional-only velocity-error feedback defines commanded force 
+        my_publisher_object.publish(g_force); // publish the control effort computed by this controller
         ROS_INFO("force command = %f", g_force.data);
         ros::spinOnce(); //allow data update from callback; 
         naptime.sleep(); // wait for remainder of specified period; 
