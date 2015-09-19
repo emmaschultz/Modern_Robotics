@@ -1,5 +1,0 @@
-<launch>
-	<node name= "velocity_controller" pkg= "Assignment1" type= "velocity_controller" />
-	<node name= "velocity_commander" pkg= "Assignment1" type= "velocity_commander" />
-	<node name= "velocity_simulator" pkg= "Assignment1" type= "velocity_simulator" />
-</launch>
