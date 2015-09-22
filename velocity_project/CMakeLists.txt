@@ -1,27 +1,62 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(velocity_project)
 
-find_package(catkin_simple REQUIRED)
+## This is where you put all of the dependencies for the package.
+## When using catkin_create_pkg, this is one of the places where 
+## the dependencies are auto-placed.  If you need to add more later
+## on, you need to put them in manually. 
 
-catkin_simple()
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  std_msgs
+  message_generation
+)
 
-# example boost usage
-# find_package(Boost REQUIRED COMPONENTS system thread)
+## Tell catkin about your services here so it will properly generate
+## the required header files
 
-# C++0x support - not quite the same as final C++11!
-# SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+add_service_files(
+	FILES
+	amplitude_frequency_msg.srv
+)
 
-# Libraries
-# cs_add_library(my_lib src/my_lib.cpp)   
+## Message / service dependencies go here!  Ie, if you have a 
+## geometry_msgs/Twist in your message / service, you should
+## put 'geometry_msgs' here.
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+)
 
-# Executables
-cs_add_executable(amplitude_frequency_client src/amplitude_frequency_client.cpp)
-cs_add_executable(velocity_commander src/velocity_commander.cpp)
-cs_add_executable(velocity_controller src/velocity_controller.cpp)
-cs_add_executable(velocity_simulator src/velocity_simulator.cpp)
+catkin_package()
 
-# target_link_library(example my_lib)
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 
-cs_install()
-cs_export()
-    
+## This stuff tells catkin to compile your node!
+add_executable(amplitude_frequency_client src/amplitude_frequency_client.cpp)
+add_executable(velocity_commander src/velocity_commander.cpp)
+add_executable(velocity_controller src/velocity_controller.cpp)
+add_executable(velocity_simulator src/velocity_simulator.cpp)
+
+target_link_libraries(amplitude_frequency_client
+
+   ${catkin_LIBRARIES}
+)
+
+target_link_libraries(velocity_commander
+
+   ${catkin_LIBRARIES}
+)
+
+target_link_libraries(velocity_controller
+
+   ${catkin_LIBRARIES}
+)
+
+target_link_libraries(velocity_simulator
+
+   ${catkin_LIBRARIES}
+)

@@ -4,8 +4,8 @@
 
 #define PI 3.14159265
 
-std_msgs::Float64 g_amplitude = 1.0;
-std_msgs::Float64 g_frequency = 1.0;
+std_msgs::Float64 g_amplitude;
+std_msgs::Float64 g_frequency;
 
 bool callback(velocity_project::amplitude_frequency_msgRequest& request, velocity_project::amplitude_frequency_msgResponse& response) {
     ROS_INFO("callback activated");
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
     while (ros::ok()) {
         ros::spinOnce(); //update data from callback function
-        command.data = g_amplitude * sin(2 * PI * g_frequency * point_in_time);  //calculate the sin wave values
+        command.data = g_amplitude.data * sin(2 * PI * g_frequency.data * point_in_time);  //calculate the sin wave values
         point_in_time += 0.01;  //increment the counter; this should execute 100 times in one second
         my_commander_object.publish(command);  //publishes the current vel_cmd
         naptime.sleep();

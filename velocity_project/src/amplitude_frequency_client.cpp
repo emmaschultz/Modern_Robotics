@@ -12,8 +12,10 @@ int main(int argc, char **argv) {
     velocity_project::amplitude_frequency_msg srv;
 
     //initialize the amplitude and frequency to zero
-    std_msgs::Float64 amplitude.data = 0.0;
-    std_msgs::Float64 frequency.data = 0.0;
+    std_msgs::Float64 amplitude;
+    amplitude.data = 0.0;
+    std_msgs::Float64 frequency;
+    frequency.data = 0.0;
 
     while (ros::ok()) {
         cout << "\n";
@@ -40,7 +42,7 @@ int main(int argc, char **argv) {
                 ROS_INFO("Changed value of amplitude to %f", srv.request.amplitude);
                 ROS_ERROR("Did nto change value of frequency.");
             } else {
-                ROS_ERROR("Did not change value of amplitude or frequency.")
+                ROS_ERROR("Did not change value of amplitude or frequency.");
                 return 1;
             }
         } else {
