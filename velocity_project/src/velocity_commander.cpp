@@ -22,7 +22,6 @@ bool callback(velocity_project::amplitude_frequency_msgRequest& request, velocit
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "velocity_commander1");
-    //ros::init(argc, argv, "amplitude_frequency_service1"); //TODO: is this necessary?
     ros::NodeHandle n;
     ros::Publisher my_commander_object = n.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
     ros::ServiceServer amplitude_frequency_service = n.advertiseService("change_amplitude_and_frequency", callback);

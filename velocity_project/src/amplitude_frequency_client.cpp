@@ -2,7 +2,7 @@
 #include <velocity_project/amplitude_frequency_msg.h>
 #include <std_msgs/Float64.h>
 #include <iostream>
-#include <string>  //TODO: do I need this still on here?
+#include <string>
 using namespace std;
 
 int main(int argc, char **argv) {
