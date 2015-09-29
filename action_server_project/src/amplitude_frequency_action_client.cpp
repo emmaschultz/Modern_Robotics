@@ -12,6 +12,7 @@ void doneCb(const actionlib::SimpleClientGoalState& state, const action_server_p
 
 int main(int argc, char** argv) {
         ros::init(argc, argv, "amplitude_frequency_action_client_node"); //name of this node
+        
         action_server_project::amplitude_frequency_msgGoal goal;
         
         actionlib::SimpleActionClient<action_server_project::amplitude_frequency_msgAction> action_client("amplitude_frequency_action", true);
@@ -30,11 +31,12 @@ int main(int argc, char** argv) {
         ROS_INFO("connected to action server");  // if here, then we connected to the server;
 
         while(true) {
-            // stuff a goal message:
-            goal.input = g_count; // this merely sequentially numbers the goals sent
-            //action_client.sendGoal(goal); // simple example--send goal, but do not specify callbacks
-            action_client.sendGoal(goal,&doneCb); // we could also name additional callback functions here, if desired
-            //    action_client.sendGoal(goal, &doneCb, &activeCb, &feedbackCb); //e.g., like this
+            //set the amplitude/frequency/number of cycles to be equal to user input
+            goal.requested_amplitude = 0;
+            goal.requested_frequency = 0;
+            goal.requested_num_cycles = 0;
+
+            action_client.sendGoal(goal,&doneCb);
             
             bool finished_before_timeout = action_client.waitForResult(ros::Duration(5.0));
             //bool finished_before_timeout = action_client.waitForResult(); // wait forever...
