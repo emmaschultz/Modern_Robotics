@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <std_msgs/Float64.h>
 #include <actionlib/client/simple_action_client.h>
 #include <action_server_project/amplitude_frequency_msgAction.h>
 
@@ -31,11 +32,22 @@ int main(int argc, char** argv) {
         ROS_INFO("connected to action server");  // if here, then we connected to the server;
 
         while(true) {
-            //set the amplitude/frequency/number of cycles to be equal to user input
-            goal.requested_amplitude = 0;
-            goal.requested_frequency = 0;
-            goal.requested_num_cycles = 0;
+            std_msgs::Float64 amplitude;
+            std_msgs::Float64 frequency;
+            std_msgs::Float64 numCycles;
+            std::cout << "Please enter in a desired amplitude: "
+            std::cin >> amplitude.data;
 
+            std::cout << "Please enter in a desired frequency: "
+            std::cin >> frequency.data;
+
+            std::cout << "Please enter in a desired number of cycles: "
+            std::cin >> numCycles.data;
+
+            //set the amplitude/frequency/number of cycles to be equal to user input and then send the goal
+            goal.requested_amplitude = amplitude.data;
+            goal.requested_frequency = frequency.data;
+            goal.requested_num_cycles = numCycles.data;
             action_client.sendGoal(goal,&doneCb);
             
             bool finished_before_timeout = action_client.waitForResult(ros::Duration(5.0));
