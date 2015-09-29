@@ -1,0 +1,10 @@
+#goal
+float64 requested_amplitude
+float64 requested_frequency
+int32 requested_num_cycles
+---
+#result
+bool goal_succeeded
+---
+#feedback
+int32 fdbk
