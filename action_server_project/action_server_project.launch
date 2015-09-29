@@ -1,6 +1,6 @@
 <launch>
 <!-- <node name= "amplitude_frequency_action_client" pkg= "action_server_project" type= "amplitude_frequency_action_client" /> -->
 <node name= "velocity_commander_action_server" pkg= "action_server_project" type= "velocity_commander_action_server" />
-<node name= "velocity_controller" pkg= "action_server_project" type= "velocity_controller" />
-<node name= "velocity_simulator" pkg= "action_server_project" type= "velocity_simulator" />
+<node name= "controller" pkg= "action_server_project" type= "controller" />
+<node name= "simulator" pkg= "action_server_project" type= "simulator" />
 </launch>
