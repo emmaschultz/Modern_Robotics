@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int32.h>
 #include <actionlib/server/simple_action_server.h>
 #include <action_server_project/amplitude_frequency_msgAction.h>
 
@@ -7,6 +8,7 @@
 
 std_msgs::Float64 g_amplitude;
 std_msgs::Float64 g_frequency;
+std_msgs::Int32 g_numCycles;
 
 class VelocityCommanderActionServer {
 private:
@@ -27,7 +29,23 @@ public:
 };
 
 
+VelocityCommanderActionServer::VelocityCommanderActionServer() : as_(nh_, "amplitude_frequency_action", boost::bind(&VelocityCommanderActionServer::executeCB, this, _1), false) {
+    ROS_INFO("in constructor of VelocityCommanderActionServer...");
+    as_.start();   //start the server
+}
 
+
+void VelocityCommanderActionServer::executeCB(const actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction>::GoalConstPtr& goal) {
+    g_amplitude.data = goal_.requested_amplitude;
+    g_frequency.data = goal_.requested_frequency;
+    g_numCycles.data = goal_.requested_num_cycles;
+
+    result_.goal_succeeded = true;
+
+    as_.setSucceeded(result_);
+}
+
+/*
 bool callback(velocity_project::amplitude_frequency_msgRequest& request, velocity_project::amplitude_frequency_msgResponse& response) {
     ROS_INFO("callback activated");
     g_amplitude.data = request.amplitude;  //set amplitude equal to value specified by client
@@ -39,13 +57,14 @@ bool callback(velocity_project::amplitude_frequency_msgRequest& request, velocit
     
     return true;
 }
-
+*/
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "velocity_commander1");
-    ros::NodeHandle n;
+    ros::init(argc, argv, "velocity_commander_action_server_node");  //name of this node
     ros::Publisher my_commander_object = n.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
-    ros::ServiceServer amplitude_frequency_service = n.advertiseService("change_amplitude_and_frequency", callback);
+    //ros::ServiceServer amplitude_frequency_service = n.advertiseService("change_amplitude_and_frequency", callback);
+
+    VelocityCommanderActionServer actionServerObject;   //create an instance of VelocityCommanderActionServer
 
     std_msgs::Float64 command; //this will contain the value that will be published to vel_cmd
     double point_in_time = 0.0;
