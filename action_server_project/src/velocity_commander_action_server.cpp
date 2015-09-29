@@ -8,6 +8,26 @@
 std_msgs::Float64 g_amplitude;
 std_msgs::Float64 g_frequency;
 
+class VelocityCommanderActionServer {
+private:
+    ros::NodeHandle nh_;
+
+    actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction> as_;
+
+    action_server_project::amplitude_frequency_msgGoal goal_;
+    action_server_project::amplitude_frequency_msgResult result_;
+    action_server_project::amplitude_frequency_msgFeedback feedback_;
+
+public:
+    VelocityCommanderActionServer();
+
+    ~VelocityCommanderActionServer(void) {
+    }
+    void executeCB(const actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction>::GoalConstPtr& goal);
+};
+
+
+
 bool callback(velocity_project::amplitude_frequency_msgRequest& request, velocity_project::amplitude_frequency_msgResponse& response) {
     ROS_INFO("callback activated");
     g_amplitude.data = request.amplitude;  //set amplitude equal to value specified by client
@@ -42,3 +62,4 @@ int main(int argc, char **argv) {
         naptime.sleep();
     }
 }
+
