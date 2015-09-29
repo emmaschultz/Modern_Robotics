@@ -1,14 +1,13 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int32.h>
 #include <actionlib/client/simple_action_client.h>
 #include <action_server_project/amplitude_frequency_msgAction.h>
 
 // This function will be called once when the goal completes
 // this is optional, but it is a convenient way to get access to the "result" message sent by the server
 void doneCb(const actionlib::SimpleClientGoalState& state, const action_server_project::amplitude_frequency_msgResultConstPtr& result) {
-    ROS_INFO("doneCb: server responded with state [%s]", state.toString().c_str());
-    int diff = result->output - result->goal_stamp;
-    ROS_INFO("got result output = %d; goal_stamp = %d; diff = %d",result->output,result->goal_stamp,diff);
+    //TODO what goes here? if anything?
 }
 
 int main(int argc, char** argv) {
@@ -34,7 +33,7 @@ int main(int argc, char** argv) {
         while(true) {
             std_msgs::Float64 amplitude;
             std_msgs::Float64 frequency;
-            std_msgs::Float64 numCycles;
+            std_msgs::Int32 numCycles;
             std::cout << "Please enter in a desired amplitude: "
             std::cin >> amplitude.data;
 
