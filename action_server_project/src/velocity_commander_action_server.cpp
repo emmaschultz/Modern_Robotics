@@ -15,6 +15,7 @@ private:
     ros::NodeHandle nh_;
 
     actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction> as_;
+    ros::Publisher my_commander_object = nh_.advertise<std_msgs::Float64>("vel_cmd", 1);       //publish to vel_cmd topic
 
     action_server_project::amplitude_frequency_msgGoal goal_;
     action_server_project::amplitude_frequency_msgResult result_;
@@ -47,7 +48,7 @@ void VelocityCommanderActionServer::executeCB(const actionlib::SimpleActionServe
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "velocity_commander_action_server_node");  //name of this node
-    ros::Publisher my_commander_object = n.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
+    //ros::Publisher my_commander_object = nh_.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
     //ros::ServiceServer amplitude_frequency_service = n.advertiseService("change_amplitude_and_frequency", callback);
 
     VelocityCommanderActionServer actionServerObject;   //create an instance of VelocityCommanderActionServer

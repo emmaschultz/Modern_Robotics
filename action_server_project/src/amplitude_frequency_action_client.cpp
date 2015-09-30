@@ -34,13 +34,13 @@ int main(int argc, char** argv) {
             std_msgs::Float64 amplitude;
             std_msgs::Float64 frequency;
             std_msgs::Int32 numCycles;
-            std::cout << "Please enter in a desired amplitude: "
+            std::cout << "Please enter in a desired amplitude: ";
             std::cin >> amplitude.data;
 
-            std::cout << "Please enter in a desired frequency: "
+            std::cout << "Please enter in a desired frequency: ";
             std::cin >> frequency.data;
 
-            std::cout << "Please enter in a desired number of cycles: "
+            std::cout << "Please enter in a desired number of cycles: ";
             std::cin >> numCycles.data;
 
             //set the amplitude/frequency/number of cycles to be equal to user input and then send the goal
@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
             bool finished_before_timeout = action_client.waitForResult(ros::Duration(5.0));
             //bool finished_before_timeout = action_client.waitForResult(); // wait forever...
             if (!finished_before_timeout) {
-                ROS_WARN("giving up waiting on result for goal number %d",g_count);
+                ROS_WARN("giving up waiting on result for goal");
                 return 0;
             } else {
               //if here, then server returned a result to us
