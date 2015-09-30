@@ -9,6 +9,7 @@
 std_msgs::Float64 g_amplitude;
 std_msgs::Float64 g_frequency;
 std_msgs::Int32 g_numCycles;
+ros::NodeHandle g_nh;
 
 class VelocityCommanderActionServer {
 private:
@@ -48,7 +49,8 @@ void VelocityCommanderActionServer::executeCB(const actionlib::SimpleActionServe
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "velocity_commander_action_server_node");  //name of this node
-    ros::Publisher my_commander_object = nh_.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
+    //ros::Publisher my_commander_object = nh_.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
+    ros::Publisher my_commander_object = g_nh.advertise<std_msgs::Float64>("vel_cmd", 1);  //publish to vel_cmd topic
     //ros::ServiceServer amplitude_frequency_service = n.advertiseService("change_amplitude_and_frequency", callback);
 
     VelocityCommanderActionServer actionServerObject;   //create an instance of VelocityCommanderActionServer
