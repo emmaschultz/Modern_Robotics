@@ -15,7 +15,6 @@ private:
     ros::NodeHandle nh_;
 
     actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction> as_;
-    //ros::Publisher my_commander_object = nh_.advertise<std_msgs::Float64>("vel_cmd", 1);       //publish to vel_cmd topic
 
     action_server_project::amplitude_frequency_msgGoal goal_;
     action_server_project::amplitude_frequency_msgResult result_;
@@ -37,11 +36,12 @@ VelocityCommanderActionServer::VelocityCommanderActionServer() : as_(nh_, "ampli
 
 
 void VelocityCommanderActionServer::executeCB(const actionlib::SimpleActionServer<action_server_project::amplitude_frequency_msgAction>::GoalConstPtr& goal) {
-    g_amplitude.data = goal_.requested_amplitude;
-    g_frequency.data = goal_.requested_frequency;
-    g_numCycles.data = goal_.requested_num_cycles;
+    //set the amplitude/frequency/numCycles to be equal to the values specified in the action msg
+    g_amplitude.data = goal->requested_amplitude;
+    g_frequency.data = goal->requested_frequency;
+    g_numCycles.data = goal->requested_num_cycles;
 
-    result_.goal_succeeded = true;
+    result_.goal_succeeded = true;  //set the boolean in the message to true to show that the amplitude/frequency/numCycles has been received
 
     as_.setSucceeded(result_);
 }
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
     std_msgs::Float64 period;  //this will house the data containing the length of the period for the sine wave
     double point_in_time = 0.0;
     double totalPeriods = 0.0;
-    double counter = 0.0;
+    double counter = 0.0;    //keeps track of where you are in the cycles and then resets once the number of cycles has been reached
 
     ros::Rate naptime(100.0);   //increased this to have higher sample rate, which results in a smoother sin wave
 
@@ -73,11 +73,11 @@ int main(int argc, char **argv) {
 
         //if the number of cycles has not been reached yet, continue calculating the sine wave
         //else command a velocity of zero
-        if(totalPeriods > counter){
+        if(totalPeriods >= counter){
             counter += 0.01;
             command.data = g_amplitude.data * sin(2 * PI * g_frequency.data * point_in_time);
         } else {
-            counter = 0.0;  //reset counter back to zero because last cycle has been reached
+            counter = 0.0;  //reset counter back to zero because the requested number of cycles have been completed
             command.data = 0.0; //command a velocity of zero when the requested number of cycles have been completed
         }
 

@@ -7,7 +7,11 @@
 // This function will be called once when the goal completes
 // this is optional, but it is a convenient way to get access to the "result" message sent by the server
 void doneCb(const actionlib::SimpleClientGoalState& state, const action_server_project::amplitude_frequency_msgResultConstPtr& result) {
-    //TODO what goes here? if anything?
+    if(result->goal_succeeded){
+        ROS_INFO("Goal has been succeeded! Yay!");
+    } else {
+        ROS_INFO("Goal did not succeed... boooo");
+    }
 }
 
 int main(int argc, char** argv) {
