@@ -1,4 +1,4 @@
-#include <ros/ros.h> //ALWAYS need to include this
+#include <ros/ros.h>
 #include <gazebo_msgs/GetModelState.h>
 #include <gazebo_msgs/ApplyJointEffort.h>
 #include <gazebo_msgs/GetJointProperties.h>
@@ -28,7 +28,7 @@ void posCmdCB(const std_msgs::Float64& pos_cmd_msg)
 
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "minimal_joint_controller");
+    ros::init(argc, argv, "joint_controller");
     ros::NodeHandle nh;
     ros::Duration half_sec(0.5);
     
