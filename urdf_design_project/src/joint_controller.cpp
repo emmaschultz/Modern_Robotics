@@ -54,18 +54,23 @@ int main(int argc, char **argv) {
     ROS_INFO("/gazebo/get_joint_properties service exists");
     
     ros::ServiceClient get_jnt_state_client = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");
+    ROS_INFO("began service client");
 
     //for joint1
     gazebo_msgs::ApplyJointEffort effort_cmd_srv_msg;
     gazebo_msgs::GetJointProperties get_joint_state_srv_msg;
+    ROS_INFO("created messages for joint1");
+
     //for joint2
     gazebo_msgs::ApplyJointEffort effort_cmd_srv_msg2;
     gazebo_msgs::GetJointProperties get_joint_state_srv_msg2;
+    ROS_INFO("created messages for joint2");
     
     ros::Publisher trq_publisher = nh.advertise<std_msgs::Float64>("jnt_trq", 1);   //MAYBE NEED TO HAVE TWO COPIES OF THESE?
     ros::Publisher vel_publisher = nh.advertise<std_msgs::Float64>("jnt_vel", 1);
     ros::Publisher pos_publisher = nh.advertise<std_msgs::Float64>("jnt_pos", 1);
     ros::Publisher joint_state_publisher = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
+    ROS_INFO("created publishers");
 
     ros::Subscriber pos_cmd_subscriber = nh.subscribe("pos_cmd",1,posCmdCB);
     
@@ -80,6 +85,7 @@ int main(int argc, char **argv) {
     ros::Duration duration(dt);
     ros::Rate rate_timer(1/dt);
     
+    ROS_INFO("begin effort command messages for joint1");
     effort_cmd_srv_msg.request.joint_name = "joint1";
     effort_cmd_srv_msg.request.effort = 0.0;
     effort_cmd_srv_msg.request.duration= duration;
@@ -93,6 +99,7 @@ int main(int argc, char **argv) {
 
     // set up the joint_state_msg fields to define a single joint,
     // called joint1, and initial position and vel values of 0
+    ROS_INFO("begin joint state messages for joint1");
 	joint_state_msg.header.stamp = ros::Time::now();
 	joint_state_msg.name.push_back("joint1");
     joint_state_msg.position.push_back(0.0);
@@ -101,36 +108,42 @@ int main(int argc, char **argv) {
 
 
     //new code for joint2
+    ROS_INFO("begin effort command messages for joint2");
     effort_cmd_srv_msg2.request.joint_name = "joint2";
     effort_cmd_srv_msg2.request.effort = 0.0;
     effort_cmd_srv_msg2.request.duration = duration;
 
     get_joint_state_srv_msg2.request.joint_name = "joint2";
 
+    ROS_INFO("begin joint state messages for joint2");
     joint_state_msg2.header.stamp = ros::Time::now();
     joint_state_msg2.name.push_back("joint2");
     joint_state_msg2.position.push_back(0.0);
     joint_state_msg2.velocity.push_back(0.0);
 
-
+    ROS_INFO("ended joint state messages for joint2");
 
 
 
 
     int point_in_time = 0; //keeps track of the "time" for the sine function (keeps the function moving along the x-axis)
-    while(ros::ok()) {    
+    while(ros::ok()) {
+    	ROS_INFO("entered loop");
         get_jnt_state_client.call(get_joint_state_srv_msg);
         q1 = get_joint_state_srv_msg.response.position[0];
         q1_msg.data = q1;
         pos_publisher.publish(q1_msg);
-        
+        ROS_INFO("m");
+
         q1dot = get_joint_state_srv_msg.response.rate[0];
         q1dot_msg.data = q1dot;
         vel_publisher.publish(q1dot_msg);
+        ROS_INFO("e");
 
 		joint_state_msg.header.stamp = ros::Time::now();
         joint_state_msg.position[0] = q1; 
         joint_state_msg.velocity[0] = q1dot;
+        ROS_INFO("o");
 
 		joint_state_publisher.publish(joint_state_msg);
         
@@ -147,6 +160,7 @@ int main(int argc, char **argv) {
         trq_cmd = Kp * (q1_err) - Kv * q1dot;
         trq_msg.data = trq_cmd;
         trq_publisher.publish(trq_msg);
+        ROS_INFO("w");
 
         // send torque command to Gazebo
         effort_cmd_srv_msg.request.effort = trq_cmd;
