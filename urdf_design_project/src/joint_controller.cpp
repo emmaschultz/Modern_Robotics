@@ -8,6 +8,8 @@
 #include <std_msgs/Float64.h>
 #include <math.h>
 
+#define PI 3.14159265
+
 //a simple saturation function; provide saturation threshold, sat_val, and arg to be saturated, val
 double sat(double val, double sat_val) {
     if (val>sat_val)
@@ -53,8 +55,12 @@ int main(int argc, char **argv) {
     
     ros::ServiceClient get_jnt_state_client = nh.serviceClient<gazebo_msgs::GetJointProperties>("/gazebo/get_joint_properties");
 
+    //for joint1
     gazebo_msgs::ApplyJointEffort effort_cmd_srv_msg;
     gazebo_msgs::GetJointProperties get_joint_state_srv_msg;
+    //for joint2
+    gazebo_msgs::ApplyJointEffort effort_cmd_srv_msg2;
+    gazebo_msgs::GetJointProperties get_joint_state_srv_msg2;
     
     ros::Publisher trq_publisher = nh.advertise<std_msgs::Float64>("jnt_trq", 1);   //MAYBE NEED TO HAVE TWO COPIES OF THESE?
     ros::Publisher vel_publisher = nh.advertise<std_msgs::Float64>("jnt_vel", 1);
@@ -65,9 +71,11 @@ int main(int argc, char **argv) {
     
     std_msgs::Float64 trq_msg;
     std_msgs::Float64 q1_msg,q1dot_msg;
-    sensor_msgs::JointState joint_state_msg;
+    std_msgs::Float64 q2_msg, q2dot_msg;      //added in new q2 messages for joint2
+    sensor_msgs::JointState joint_state_msg;  //for joint1
+    sensor_msgs::JointState joint_state_msg2; //for joint2
 
-    double q1, q1dot;
+    double q1, q1dot, q2, q2dot;  //added in a new q value to represent the second joint
     double dt = 0.01;
     ros::Duration duration(dt);
     ros::Rate rate_timer(1/dt);
@@ -78,7 +86,7 @@ int main(int argc, char **argv) {
 
     get_joint_state_srv_msg.request.joint_name = "joint1";
     //double q1_des = 1.0;
-    double q1_err;
+    double q1_err, q2_err;    //added in error field for second joint
     double Kp = 10.0;
     double Kv = 3;
     double trq_cmd;
@@ -93,23 +101,23 @@ int main(int argc, char **argv) {
 
 
     //new code for joint2
-    effort_cmd_srv_msg.request.joint_name = "joint2";
-    effort_cmd_srv_msg.request.effort = 0.0;
-    effort_cmd_srv_msg.request.duration = duration;
+    effort_cmd_srv_msg2.request.joint_name = "joint2";
+    effort_cmd_srv_msg2.request.effort = 0.0;
+    effort_cmd_srv_msg2.request.duration = duration;
 
-    get_joint_state_srv_msg.request.joint_name = "joint2";
+    get_joint_state_srv_msg2.request.joint_name = "joint2";
 
-    joint_state_msg.header.stamp = ros::Time::now();
-    joint_state_msg.name.push_back("joint2");
-    joint_state_msg.position.push_back(0.0);
-    joint_state_msg.velocity.push_back(0.0);
-
-
+    joint_state_msg2.header.stamp = ros::Time::now();
+    joint_state_msg2.name.push_back("joint2");
+    joint_state_msg2.position.push_back(0.0);
+    joint_state_msg2.velocity.push_back(0.0);
 
 
 
 
 
+
+    int point_in_time = 0; //keeps track of the "time" for the sine function (keeps the function moving along the x-axis)
     while(ros::ok()) {    
         get_jnt_state_client.call(get_joint_state_srv_msg);
         q1 = get_joint_state_srv_msg.response.position[0];
@@ -126,27 +134,75 @@ int main(int argc, char **argv) {
 
 		joint_state_publisher.publish(joint_state_msg);
         
-        //ROS_INFO("q1 = %f;  q1dot = %f",q1,q1dot);
-        //watch for periodicity
-        q1_err= g_pos_cmd-q1;
-        if (q1_err>M_PI) {
-            q1_err -= 2*M_PI;
+		g_pos_cmd = sin(2 * PI * 2.0 * point_in_time);     //frequency for joint1 is 2.0
+
+        q1_err = g_pos_cmd - q1;
+        if (q1_err > M_PI) {
+            q1_err -= 2 * M_PI;
         }
-        if (q1_err< -M_PI) {
-            q1_err += 2*M_PI;
+        if (q1_err < -M_PI) {
+            q1_err += 2 * M_PI;
         }        
             
-        trq_cmd = Kp*(q1_err)-Kv*q1dot;
-        //trq_cmd = sat(trq_cmd, 10.0); //saturate at 1 N-m
+        trq_cmd = Kp * (q1_err) - Kv * q1dot;
         trq_msg.data = trq_cmd;
         trq_publisher.publish(trq_msg);
+
         // send torque command to Gazebo
         effort_cmd_srv_msg.request.effort = trq_cmd;
         set_trq_client.call(effort_cmd_srv_msg);
+
         //make sure service call was successful
         bool result = effort_cmd_srv_msg.response.success;
         if (!result)
             ROS_WARN("service call to apply_joint_effort failed!");
+
+
+
+        //BEGIN CODE FOR JOINT2
+        get_jnt_state_client.call(get_joint_state_srv_msg2);
+        q2 = get_joint_state_srv_msg2.response.position[0];
+        q2_msg.data = q2;
+        pos_publisher.publish(q2_msg);
+
+        q2dot = get_joint_state_srv_msg2.response.rate[0];
+        q2dot_msg.data = q2dot;
+        vel_publisher.publish(q2dot_msg);
+
+        joint_state_msg2.header.stamp = ros::Time::now();
+        joint_state_msg2.position[0] = q2;
+        joint_state_msg2.velocity[0] = q2dot;
+
+        joint_state_publisher.publish(joint_state_msg2);
+
+        g_pos_cmd = sin(2 * PI * 3.0 * point_in_time);  //frequency for joint2 is 3.0
+
+        q2_err = g_pos_cmd - q2;
+        if (q2_err > M_PI) {
+        	q2_err -= 2 * M_PI;
+        }
+        if (q2_err < -M_PI) {
+        	q2_err += 2 * M_PI;
+        }
+
+        trq_cmd = Kp * (q2_err) - Kv * q2dot;
+        trq_msg.data = trq_cmd;
+        trq_publisher.publish(trq_msg);
+
+        //send to gazebo
+        effort_cmd_srv_msg2.request.effort = trq_cmd;
+        set_trq_client.call(effort_cmd_srv_msg2);
+
+        //ensure success
+        result = effort_cmd_srv_msg2.response.succees;
+        if (!result)
+        	ROS_WARN("service call to apply_joint_effort failed!");
+
+
+
+
+        point_in_time++; //increment "timer"
+
         ros::spinOnce();
 		rate_timer.sleep();
     }
