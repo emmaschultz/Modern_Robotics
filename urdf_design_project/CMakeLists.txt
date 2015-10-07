@@ -15,8 +15,7 @@ catkin_simple()
 # cs_add_library(my_lib src/my_lib.cpp)   
 
 # Executables
-# cs_add_executable(example src/example.cpp)
-# target_link_library(example my_lib)
+cs_add_executable(joint_controller src/joint_controller.cpp)
 
 cs_install()
 cs_export()

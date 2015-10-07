@@ -1,0 +1,5 @@
+<launch>
+	<param name="robot_description"
+	textfile="$(find urdf_design_project)/src/two_joint_robot_description.urdf"/>
+	<node name= "joint_controller" pkg="urdf_design_project" type= "joint_controller"/>
+</launch>
