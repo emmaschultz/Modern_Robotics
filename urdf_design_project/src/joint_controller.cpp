@@ -194,7 +194,7 @@ int main(int argc, char **argv) {
         set_trq_client.call(effort_cmd_srv_msg2);
 
         //ensure success
-        result = effort_cmd_srv_msg2.response.succees;
+        result = effort_cmd_srv_msg2.response.success;
         if (!result)
         	ROS_WARN("service call to apply_joint_effort failed!");
 
