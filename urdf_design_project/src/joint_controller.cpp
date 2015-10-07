@@ -130,8 +130,11 @@ int main(int argc, char **argv) {
     while(ros::ok()) {
     	ROS_INFO("entered loop");
         get_jnt_state_client.call(get_joint_state_srv_msg);
-        q1 = get_joint_state_srv_msg.response.position[0];
+        ROS_INFO("call client");
+        q1 = get_joint_state_srv_msg.response.position[0];  //this is the line that causes the segfault
+        ROS_INFO("set position");
         q1_msg.data = q1;
+        ROS_INFO("set message");
         pos_publisher.publish(q1_msg);
         ROS_INFO("m");
 
