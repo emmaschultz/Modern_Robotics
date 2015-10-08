@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     gazebo_msgs::ApplyJointEffort effort_cmd_srv_msg2;
     gazebo_msgs::GetJointProperties get_joint_state_srv_msg2;
     
-    ros::Publisher trq_publisher = nh.advertise<std_msgs::Float64>("jnt_trq", 1);   //MAYBE NEED TO HAVE TWO COPIES OF THESE?
+    ros::Publisher trq_publisher = nh.advertise<std_msgs::Float64>("jnt_trq", 1);
     ros::Publisher vel_publisher = nh.advertise<std_msgs::Float64>("jnt_vel", 1);
     ros::Publisher pos_publisher = nh.advertise<std_msgs::Float64>("jnt_pos", 1);
     ros::Publisher joint_state_publisher = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
     get_joint_state_srv_msg.request.joint_name = "joint1";
     //double q1_des = 1.0;
     double q1_err, q2_err;    //added in error field for second joint
-    double Kp = 10.0;
+    double Kp = 20.0;
     double Kv = 3;
     double trq_cmd;
 
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
     int point_in_time = 0; //keeps track of the "time" for the sine function (keeps the function moving along the x-axis)
     while(ros::ok()) {
         get_jnt_state_client.call(get_joint_state_srv_msg);
-        q1 = get_joint_state_srv_msg.response.position[0];  //this is the line that causes the segfault
+        q1 = get_joint_state_srv_msg.response.position[0];
         q1_msg.data = q1;
         pos_publisher.publish(q1_msg);
 
@@ -132,7 +132,7 @@ int main(int argc, char **argv) {
         joint_state_msg.velocity[0] = q1dot;
 		joint_state_publisher.publish(joint_state_msg);
         
-		g_pos_cmd = sin(2 * PI * 2.0 * point_in_time);     //frequency for joint1 is 2.0
+		g_pos_cmd = sin(2 * PI * 2.0 * point_in_time * dt);     //frequency for joint1 is 2.0
 
         q1_err = g_pos_cmd - q1;
         if (q1_err > M_PI) {
@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
         joint_state_msg2.velocity[0] = q2dot;
         joint_state_publisher.publish(joint_state_msg2);
 
-        g_pos_cmd = sin(2 * PI * 3.0 * point_in_time);  //frequency for joint2 is 3.0
+        g_pos_cmd = sin(2 * PI * 3.0 * point_in_time * dt);  //frequency for joint2 is 3.0
 
         q2_err = g_pos_cmd - q2;
         if (q2_err > M_PI) {
@@ -194,9 +194,6 @@ int main(int argc, char **argv) {
         result = effort_cmd_srv_msg2.response.success;
         if (!result)
         	ROS_WARN("service call to apply_joint_effort failed!");
-
-
-
 
         point_in_time++; //increment "timer"
 
