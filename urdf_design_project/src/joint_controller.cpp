@@ -130,7 +130,6 @@ int main(int argc, char **argv) {
 		joint_state_msg.header.stamp = ros::Time::now();
         joint_state_msg.position[0] = q1; 
         joint_state_msg.velocity[0] = q1dot;
-
 		joint_state_publisher.publish(joint_state_msg);
         
 		g_pos_cmd = sin(2 * PI * 2.0 * point_in_time);     //frequency for joint1 is 2.0
@@ -171,7 +170,6 @@ int main(int argc, char **argv) {
         joint_state_msg2.header.stamp = ros::Time::now();
         joint_state_msg2.position[0] = q2;
         joint_state_msg2.velocity[0] = q2dot;
-
         joint_state_publisher.publish(joint_state_msg2);
 
         g_pos_cmd = sin(2 * PI * 3.0 * point_in_time);  //frequency for joint2 is 3.0
