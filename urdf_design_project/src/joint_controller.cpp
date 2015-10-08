@@ -21,8 +21,7 @@ double sat(double val, double sat_val) {
 }
 
 double g_pos_cmd=0.0; //position command input-- global var
-void posCmdCB(const std_msgs::Float64& pos_cmd_msg) 
-{ 
+void posCmdCB(const std_msgs::Float64& pos_cmd_msg) { 
   ROS_INFO("received value of pos_cmd is: %f",pos_cmd_msg.data); 
   g_pos_cmd = pos_cmd_msg.data;
 } 
@@ -88,7 +87,7 @@ int main(int argc, char **argv) {
     get_joint_state_srv_msg.request.joint_name = "joint1";
     //double q1_des = 1.0;
     double q1_err, q2_err;    //added in error field for second joint
-    double Kp = 20.0;
+    double Kp = 40.0;  //20.0, 40.0
     double Kv = 3;
     double trq_cmd;
 
@@ -132,7 +131,7 @@ int main(int argc, char **argv) {
         joint_state_msg.velocity[0] = q1dot;
 		joint_state_publisher.publish(joint_state_msg);
         
-		g_pos_cmd = sin(2 * PI * 2.0 * point_in_time * dt);     //frequency for joint1 is 2.0
+		g_pos_cmd = sin(2 * PI * 1.0 * point_in_time * dt);     //frequency for joint1 is 2.0
 
         q1_err = g_pos_cmd - q1;
         if (q1_err > M_PI) {
@@ -172,7 +171,7 @@ int main(int argc, char **argv) {
         joint_state_msg2.velocity[0] = q2dot;
         joint_state_publisher.publish(joint_state_msg2);
 
-        g_pos_cmd = sin(2 * PI * 3.0 * point_in_time * dt);  //frequency for joint2 is 3.0
+        g_pos_cmd = sin(2 * PI * 1.0 * point_in_time * dt);  //frequency for joint2 is 3.0
 
         q2_err = g_pos_cmd - q2;
         if (q2_err > M_PI) {
