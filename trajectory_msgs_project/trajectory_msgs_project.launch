@@ -8,10 +8,11 @@
 	<param name="robot_description"
 	textfile="$(find trajectory_msgs_project)/src/two_DOF_robot_description.urdf"/>
 
-	<!-- run joint_controller, robot_state_publisher, and rviz -->
+	<!-- run joint_controller, trajectory_action_server, trajectory_action_client, robot_state_publisher, and rviz -->
 	<node name= "two_DOF_joint_controller" pkg="trajectory_msgs_project" type= "two_DOF_joint_controller"/>
-
+	<node name= "trajectory_action_server" pkg="trajectory_msgs_project" type= "trajectory_action_server"/>
+	<node name= "trajectory_action_client" pkg="trajectory_msgs_project" type= "trajectory_action_client"/>
 	<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
-
 	<node pkg="rviz" type="rviz" name="rviz"/>
+	
 </launch>
