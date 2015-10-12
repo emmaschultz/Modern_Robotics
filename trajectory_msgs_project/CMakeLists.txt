@@ -15,7 +15,10 @@ catkin_simple()
 # cs_add_library(my_lib src/my_lib.cpp)   
 
 # Executables
-# cs_add_executable(example src/example.cpp)
+cs_add_executable(trajectory_action_client src/trajectory_action_client.cpp)
+cs_add_executable(trajectory_action_server src/trajectory_action_server.cpp)
+cs_add_executable(two_DOF_joint_controller src/two_DOF_joint_controller.cpp)
+
 # target_link_library(example my_lib)
 
 cs_install()
