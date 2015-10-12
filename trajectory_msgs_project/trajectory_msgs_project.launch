@@ -1,0 +1,17 @@
+<launch>
+	<include file ="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+	<!-- spawn robot in gazebo -->
+	<node name="spawn_robot" pkg="gazebo_ros" type="spawn_model" args="-file $(find trajectory_msgs_project)/src/two_DOF_robot_description.urdf -urdf -model two_DOF_robot"/>
+
+	<!-- send robot urdf to param server -->
+	<param name="robot_description"
+	textfile="$(find trajectory_msgs_project)/src/two_DOF_robot_description.urdf"/>
+
+	<!-- run joint_controller, robot_state_publisher, and rviz -->
+	<node name= "two_DOF_joint_controller" pkg="trajectory_msgs_project" type= "two_DOF_joint_controller"/>
+
+	<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
+
+	<node pkg="rviz" type="rviz" name="rviz"/>
+</launch>
