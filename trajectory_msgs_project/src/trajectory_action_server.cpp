@@ -1,4 +1,4 @@
-// example_trajectory_action_server: complementary server for trajectory messages
+// trajectory_action_server: complementary server for trajectory messages
 // accepts trajectory goals, interpolates between points linearly at specified dt
 // The velocity commands are ignored by this simple interpolator
 
@@ -18,7 +18,7 @@ int g_count = 0;
 bool g_count_failure = false;
 
 //define a class TrajectoryActionServer, which will own an action server and a publisher
-// ideally, it would also own a subscriber to joint_states, in order to assure starting poses are always safe (TODO)
+//ideally, it would also own a subscriber to joint_states, in order to assure starting poses are always safe (TODO)
 //member method "send_joint_commands_()" must be customized to talk to a particular robot
 
 class TrajectoryActionServer {

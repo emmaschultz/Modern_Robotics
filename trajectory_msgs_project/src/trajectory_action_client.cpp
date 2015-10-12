@@ -66,32 +66,42 @@ int main(int argc, char** argv) {
     double phase = 0.0; //radians        
 	double time_from_start = 0.0; // seconds
 	double q_des, qdot_des; //radians, radians/sec
-    double q2_des, q2dot_des;                                //TODO do I need this for a second joint?
+    double q2_des, q2dot_des; //for joint2                                                                                                //TODO do I need this for a second joint?
         
     //"phase" is a convenient variable = omega*time
 	for (phase = 0.0; phase < final_phase; phase += omega * dt) {
-		q_des = start_angle + amp*sin(phase); //here we make up a desired trajectory shape: q_des(t)
-		qdot_des = amp*omega*cos(phase); // this is the time derivative of q_des; 
-		trajectory_point.positions[0] = q_des; // do this for every joint, from 0 through njnts-1
-		trajectory_point.velocities[0] = qdot_des; // and all velocities (in the server example, velocities will get ignored)
+		q_des = start_angle + amp * sin(phase); //here we make up a desired trajectory shape: q_des(t)                                   *need to be duplicated for second joint?
+		qdot_des = amp * omega * cos(phase); // this is the time derivative of q_des;                                                    *
+		trajectory_point.positions[0] = q_des; // do this for every joint, from 0 through njnts-1                                        *
+		trajectory_point.velocities[0] = qdot_des; // and all velocities (in the server example, velocities will get ignored)            *
+
+        //for joint2
+        q2_des = start_angle + amp * sin(phase);
+        q2dot_des = amp * omega * cos(phase);
+        trajectory_point.positions[1] = q2_des;
+        trajectory_point.velocities[1].q2dot_des;
+
 		time_from_start+= dt; //cumulative time from start of move
+
+
  		ROS_INFO("phase = %f, t = %f",phase,time_from_start);               
 		//specify arrival time for this point--in ROS "duration" format
 		trajectory_point.time_from_start = ros::Duration(time_from_start); //this converts from seconds to ros::Duration data type
 		//append this trajectory point to the vector of points in trajectory:
 		trajectory.points.push_back(trajectory_point);	
-        //merely for illustration purposes, introduce a random time step; 
+        // merely for illustration purposes, introduce a random time step; 
         // this shows that trajectory messages do not need a fixed time step
         // also, the dt values can be quite coarse in this example, for the purpose of illustrating the interpolation capability of the server
         dt = (rand() % 100 + 1)*0.01 ;     // rand() % 100 + 1 in the range 1 to 100, so dt is in the range from 0.01 to 1.0 sec
 	}
+
 	final_time = time_from_start; // the last assigned time; we should expect "success" back from our server after this long, else something went wrong
 	int npts = trajectory.points.size();  //we just created this many points in our trajectory message
 	ROS_INFO("populated trajectory with %d points",npts);
 	//copy this trajectory into our action goal:	
 	goal.trajectory = trajectory;
 
-	//and send out the goal:
+	//and send out the goal
     action_client.sendGoal(goal,&doneCb); // we could also name additional callback functions here, if desired
 
     // wait for expected duration--plus some tolerance (chosen arbitrarily to be 2 seconds)
