@@ -5,19 +5,19 @@
 
 #include <ros/ros.h>
 #include <actionlib/client/simple_action_client.h>
-#include <example_trajectory/TrajActionAction.h>
+#include <trajectory_msgs_project/TrajMsgAction.h>
 
 
 // This function will be called once when the goal completes
 // this is optional, but it is a convenient way to get access to the "result" message sent by the server
 void doneCb(const actionlib::SimpleClientGoalState& state,
-        const example_trajectory::TrajActionResultConstPtr& result) {
+        const trajectory_msgs_project::TrajMsgResultConstPtr& result) {
     ROS_INFO(" doneCb: server responded with state [%s]", state.toString().c_str());
 }
 
 int main(int argc, char** argv) {
-        ros::init(argc, argv, "demo_trajectory_client_node"); // name this node 
-        example_trajectory::TrajActionGoal goal; //instantiate a goal message compatible with our server, as defined in this package
+        ros::init(argc, argv, "trajectory_client_node"); // name this node 
+        trajectory_msgs_project::TrajMsgGoal goal; //instantiate a goal message compatible with our server, as defined in this package
         // we will command a limited-duration sinusoidal motion; define amplitude, frequency and duration
 	double omega = 1.0; //rad/sec
         double amp = 0.5; //radians
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         // below, we will randomize this dt, just to illustrate that trajectories do not have to have fixed time steps
 	double dt = 0.1; 
         
-        actionlib::SimpleActionClient<example_trajectory::TrajActionAction> action_client("example_traj_action_server", true);
+        actionlib::SimpleActionClient<trajectory_msgs_project::TrajMsgAction> action_client("traj_action_server", true);
         
         // attempt to connect to the server:
         ROS_INFO("waiting for server: ");
