@@ -25,7 +25,7 @@ class TrajectoryActionServer {
 private:
 
     ros::NodeHandle nh_;  // we'll need a node handle; get one upon instantiation
-    ros::Publisher  jnt_cmd_publisher_; // need a publisher to talk to the joint controller
+    ros::Publisher jnt_cmd_publisher_; // need a publisher to talk to the joint controller
     // this class will own a "SimpleActionServer" called "as_".
     actionlib::SimpleActionServer<trajectory_msgs_project::TrajMsgAction> as_;
     
