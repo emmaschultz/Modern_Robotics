@@ -35,7 +35,7 @@ private:
     trajectory_msgs_project::TrajMsgFeedback feedback_; // not used in this example; 
     // would need to use: as_.publishFeedback(feedback_); to send incremental feedback to the client
     
-    void  send_joint_commands_(vector <double> q_cmd_jnts); // helper function to encapsulate details of how to talk to the controller; 
+    void send_joint_commands_(vector <double> q_cmd_jnts); // helper function to encapsulate details of how to talk to the controller;
 
 public:
     TrajectoryActionServer(ros::NodeHandle* nodehandle); //define the body of the constructor outside of class definition
@@ -51,10 +51,10 @@ public:
 // we will call the action server "traj_action_server"
 TrajectoryActionServer::TrajectoryActionServer(ros::NodeHandle* nodehandle):nh_(*nodehandle), as_(nh_, "traj_action_server", boost::bind(&TrajectoryActionServer::executeCB, this, _1),false) {
     ROS_INFO("in constructor of TrajectoryActionServer...");
-    // do any other desired initializations here...specific to your implementation
     ROS_INFO("Initializing Publisher");
-    //next line specialized for use with minimal_joint_controller:
-    jnt_cmd_publisher_ = nh_.advertise<std_msgs::Float64>("pos_cmd", 1, true); 
+    //next line specialized for use with joint_controller:
+    jnt_cmd_publisher_ = nh_.advertise<std_msgs::Float64>("pos_cmd", 1, true);
+    //jnt2_cmd_publisher_ = nh_.advertise<std_msgs::Float64>("pos2_cmd". 1, true);
     as_.start(); //start the server running
 }
 
@@ -62,9 +62,21 @@ TrajectoryActionServer::TrajectoryActionServer(ros::NodeHandle* nodehandle):nh_(
 void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) { 
     //for minimal_joint_controller, we only have one joint, and we command it with a publication
     std_msgs::Float64 q_cmd_msg; //need this to send commands to minimal_joint_controller
-    q_cmd_msg.data = q_cmd_jnts[0]; // boring...only one component; really should check size, to make sure at least this component exists
-    jnt_cmd_publisher_.publish(q_cmd_msg); // this is how we talk to the minimal_joint_controller; change this for your target controller
-    ROS_INFO("commanding: %f",q_cmd_jnts[0]);
+
+    //publish all position commands
+    for(int i = 0; i < q_cmd_jnts.size(), i++){
+    	q_cmd_msg.data = q_cmd_jnts[i];
+    	jnt_cmd_publisher_.publish(q_cmd_msg);
+    	ROS_INFO("commanding: %f",q_cmd_jnts[i]);
+    }
+
+    //q_cmd_msg.data = q_cmd_jnts[0]; // boring...only one component; really should check size, to make sure at least this component exists
+    //jnt_cmd_publisher_.publish(q_cmd_msg); // this is how we talk to the minimal_joint_controller; change this for your target controller
+    
+    //q_cmd_msg.data = q_cmd_jnts[1];
+    //jnt_cmd_publisher_.publish(q_cmd_msg);
+
+    //ROS_INFO("commanding: %f",q_cmd_jnts[0]);
 }
    
    
@@ -88,7 +100,7 @@ void TrajectoryActionServer::executeCB(const actionlib::SimpleActionServer<traje
     q_cmd_jnts.resize(njoints);
     
     ROS_INFO("trajectory message commands %d joint(s)",njoints);
-    double t_final = trajectory.points[npts-1].time_from_start.toSec(); // what is the last value of time_from_start specified?  convert to seconds
+    double t_final = trajectory.points[npts - 1].time_from_start.toSec(); // what is the last value of time_from_start specified?  convert to seconds
     ROS_INFO("t_final = %f",t_final);
     double t_previous = 0.0; 
     double t_next = trajectory.points[1].time_from_start.toSec();
@@ -104,32 +116,32 @@ void TrajectoryActionServer::executeCB(const actionlib::SimpleActionServer<traje
     }
     //put the starting joint commands here.  Really, these NEED to be the robot's actual joint commands!
     // this should be tested (and abort goal if not within some tolerance)
-    q_prev_jnts = trajectory.points[ipt_next-1].positions;
+    q_prev_jnts = trajectory.points[ipt_next - 1].positions;
     q_next_jnts = trajectory.points[ipt_next].positions;
-    while (t_stream<t_final) {
+    while (t_stream < t_final) {
         //compute desired pose at current time
-        // see if t has stepped across current range, t_previous to t_next
-        while (t_stream>t_next) { //find the next time range in the sequence
+        //see if t has stepped across current range, t_previous to t_next
+        while (t_stream > t_next) { //find the next time range in the sequence
             ipt_next++;
             t_previous = t_next; //shift this down--former "next" is new "previous" in t_previous< t < t_next
             t_next = trajectory.points[ipt_next].time_from_start.toSec();
             t_range = t_next-t_previous;            
-            if (t_range< min_dt) {
+            if (t_range < min_dt) {
                 ROS_WARN("time step invalid in trajectory!");
                 as_.setAborted(result_);
                 break;
             }   
-            q_prev_jnts = trajectory.points[ipt_next-1].positions;  //find bounds for joint commands at previous and next time boundaries
+            q_prev_jnts = trajectory.points[ipt_next - 1].positions;  //find bounds for joint commands at previous and next time boundaries
             q_next_jnts = trajectory.points[ipt_next].positions;
         }        
 
-        // if here, have valid range t_previous < t_stream < t_next
+        //if here, have valid range t_previous < t_stream < t_next
         //COMMENT OUT THE NEXT LINE TO SEE COARSE TRAJECTORY WITHOUT INTERPOLATION       
-        fraction_of_range = (t_stream-t_previous)/(t_next-t_previous);
+        fraction_of_range = (t_stream - t_previous)/(t_next - t_previous);
 
         //interpolate on the joint commands...linearly;  COULD BE BETTER, e.g. with splines
-        for (int ijnt = 0;ijnt<njoints;ijnt++) {
-           q_cmd_jnts[ijnt] = q_prev_jnts[ijnt] + fraction_of_range*(q_next_jnts[ijnt]-q_prev_jnts[ijnt]); //here is a vector of new joint commands;
+        for (int ijnt = 0; ijnt < njoints; ijnt++) {
+           q_cmd_jnts[ijnt] = q_prev_jnts[ijnt] + fraction_of_range * (q_next_jnts[ijnt] - q_prev_jnts[ijnt]); //here is a vector of new joint commands;
         }
          ROS_INFO("t_prev, t_stream, t_next, fraction = %f, %f, %f, %f",t_previous,t_stream,t_next,fraction_of_range);
          ROS_INFO("q_prev, q_cmd, q_next: %f, %f, %f",q_prev_jnts[0],q_cmd_jnts[0],q_next_jnts[0]);

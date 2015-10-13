@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     ros::Duration sleep1s(1);
     if (!server_exists) {
         ROS_WARN("could not connect to server; retrying");
-        bool server_exists = action_client.waitForServer(ros::Duration(1.0)); //
+        bool server_exists = action_client.waitForServer(ros::Duration(1.0));
         sleep1s.sleep();
     }
         
