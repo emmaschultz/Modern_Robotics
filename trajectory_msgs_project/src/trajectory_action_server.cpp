@@ -64,7 +64,7 @@ void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) {
     std_msgs::Float64 q_cmd_msg; //need this to send commands to minimal_joint_controller
 
     //publish all position commands
-    for(int i = 0; i < q_cmd_jnts.size(), i++){
+    for(int i = 0; i < q_cmd_jnts.size(); i++){
     	q_cmd_msg.data = q_cmd_jnts[i];
     	jnt_cmd_publisher_.publish(q_cmd_msg);
     	ROS_INFO("commanding: %f",q_cmd_jnts[i]);

@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         q2_des = start_angle + amp * sin(phase);
         q2dot_des = amp * omega * cos(phase);
         trajectory_point.positions[1] = q2_des;
-        trajectory_point.velocities[1].q2dot_des;
+        trajectory_point.velocities[1] = q2dot_des;
 
 		time_from_start+= dt; //cumulative time from start of move
 
