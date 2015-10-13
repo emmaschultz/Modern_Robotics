@@ -17,7 +17,6 @@ double sat(double val, double sat_val) {
     if (val< -sat_val)
         return (-sat_val);
     return val;
-    
 }
 
 double g_pos_cmd=0.0; //position command input-- global var
