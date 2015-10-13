@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	double final_phase = 4 * 3.1415927; // radians--two periods
         
     //dt: break up trajectory into incremental commands this far apart in time
-	double dt = 0.1; 
-        
+	double dt = 0.1;
+    
     actionlib::SimpleActionClient<trajectory_msgs_project::TrajMsgAction> action_client("traj_action_server", true);
         
     // attempt to connect to the server:
