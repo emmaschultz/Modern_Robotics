@@ -65,7 +65,7 @@ void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) {
     //publish all position commands
     for(int i = 0; i < q_cmd_jnts.size(); i++){
     	q_cmd_msg.data = q_cmd_jnts[i];
-    	jnt_cmd_publisher_.publish(q_cmd_msg);    
+    	jnt_cmd_publisher_.publish(q_cmd_msg);
     	ROS_INFO("commanding: %f",q_cmd_jnts[i]);
     }
 }
