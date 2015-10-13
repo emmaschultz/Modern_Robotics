@@ -54,7 +54,6 @@ TrajectoryActionServer::TrajectoryActionServer(ros::NodeHandle* nodehandle):nh_(
     ROS_INFO("Initializing Publisher");
     //next line specialized for use with joint_controller:
     jnt_cmd_publisher_ = nh_.advertise<std_msgs::Float64>("pos_cmd", 1, true);
-    //jnt2_cmd_publisher_ = nh_.advertise<std_msgs::Float64>("pos2_cmd". 1, true);
     as_.start(); //start the server running
 }
 
@@ -69,14 +68,6 @@ void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) {
     	jnt_cmd_publisher_.publish(q_cmd_msg);
     	ROS_INFO("commanding: %f",q_cmd_jnts[i]);
     }
-
-    //q_cmd_msg.data = q_cmd_jnts[0]; // boring...only one component; really should check size, to make sure at least this component exists
-    //jnt_cmd_publisher_.publish(q_cmd_msg); // this is how we talk to the minimal_joint_controller; change this for your target controller
-    
-    //q_cmd_msg.data = q_cmd_jnts[1];
-    //jnt_cmd_publisher_.publish(q_cmd_msg);
-
-    //ROS_INFO("commanding: %f",q_cmd_jnts[0]);
 }
    
    

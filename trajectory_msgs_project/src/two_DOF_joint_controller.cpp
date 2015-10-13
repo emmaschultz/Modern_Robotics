@@ -76,9 +76,9 @@ int main(int argc, char **argv) {
     sensor_msgs::JointState joint_state_msg2; //for joint2
 
     double q1, q1dot, q2, q2dot;  //added in a new q value to represent the second joint
-    double dt = 0.01;
+    double dt = 0.001;
     ros::Duration duration(dt);
-    ros::Rate rate_timer(1/dt);
+    ros::Rate rate_timer(1/dt);  //1 kHz
     
     effort_cmd_srv_msg.request.joint_name = "joint1";
     effort_cmd_srv_msg.request.effort = 0.0;
@@ -87,8 +87,8 @@ int main(int argc, char **argv) {
     get_joint_state_srv_msg.request.joint_name = "joint1";
     //double q1_des = 1.0;
     double q1_err, q2_err;    //added in error field for second joint
-    double Kp = 40.0;  //20.0, 40.0
-    double Kv = 3;
+    double Kp = 40.0;
+    double Kv = 3.0;
     double trq_cmd;
 
     // set up the joint_state_msg fields to define a single joint,
