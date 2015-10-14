@@ -10,29 +10,23 @@
 
 using namespace std;
 
-//put magic numbers/parameters here, making them more obvious
 const double dt= 0.01; // decide what time resolution to use for interpolating the trajectory
 const double min_dt = 0.0000001; // require that time steps have a minimum spacing
     
 int g_count = 0;
 bool g_count_failure = false;
 
-//define a class TrajectoryActionServer, which will own an action server and a publisher
-//ideally, it would also own a subscriber to joint_states, in order to assure starting poses are always safe (TODO)
-//member method "send_joint_commands_()" must be customized to talk to a particular robot
-
 class TrajectoryActionServer {
 private:
 
-    ros::NodeHandle nh_;  // we'll need a node handle; get one upon instantiation
-    ros::Publisher jnt_cmd_publisher_; // need a publisher to talk to the joint controller
-    // this class will own a "SimpleActionServer" called "as_".
+    ros::NodeHandle nh_;
+    ros::Publisher jnt_cmd_publisher_; //this publisher talks to the joint_controller
     actionlib::SimpleActionServer<trajectory_msgs_project::TrajMsgAction> as_;
     
     // here are some message types to communicate with our client(s)
     trajectory_msgs_project::TrajMsgGoal goal_; // goal message, received from client
     trajectory_msgs_project::TrajMsgResult result_; // put results here, to be sent back to the client when done w/ goal
-    trajectory_msgs_project::TrajMsgFeedback feedback_; // not used in this example; 
+    trajectory_msgs_project::TrajMsgFeedback feedback_; // not used in this example;
     // would need to use: as_.publishFeedback(feedback_); to send incremental feedback to the client
     
     void send_joint_commands_(vector <double> q_cmd_jnts); // helper function to encapsulate details of how to talk to the controller;
@@ -42,13 +36,11 @@ public:
 
     ~TrajectoryActionServer(void) {
     }
-    // Action Interface: this does all the work
-    // uses goal message defined in "example_trajectory" package
+
     void executeCB(const actionlib::SimpleActionServer<trajectory_msgs_project::TrajMsgAction>::GoalConstPtr& goal);
 };
 
 //clumsy sytax for initializing objects within the constructor
-// we will call the action server "traj_action_server"
 TrajectoryActionServer::TrajectoryActionServer(ros::NodeHandle* nodehandle):nh_(*nodehandle), as_(nh_, "traj_action_server", boost::bind(&TrajectoryActionServer::executeCB, this, _1),false) {
     ROS_INFO("in constructor of TrajectoryActionServer...");
     ROS_INFO("Initializing Publisher");
@@ -57,10 +49,9 @@ TrajectoryActionServer::TrajectoryActionServer(ros::NodeHandle* nodehandle):nh_(
     as_.start(); //start the server running
 }
 
-// helper function to encapsulate details of how to talk to the controller; need to specialize this for your controller
+//helper function to encapsulate details of how to talk to the controller; need to specialize this for your controller
 void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) { 
-    //for minimal_joint_controller, we only have one joint, and we command it with a publication
-    std_msgs::Float64 q_cmd_msg; //need this to send commands to minimal_joint_controller
+    std_msgs::Float64 q_cmd_msg;
 
     //publish all position commands
     for(int i = 0; i < q_cmd_jnts.size(); i++){
@@ -73,8 +64,6 @@ void  TrajectoryActionServer::send_joint_commands_(vector <double> q_cmd_jnts) {
    
 //here is where we do the work to act on goal requests
 void TrajectoryActionServer::executeCB(const actionlib::SimpleActionServer<trajectory_msgs_project::TrajMsgAction>::GoalConstPtr& goal) {
-    // the class owns the action server, so we can use its member methods here
-    // the goal is a pointer, and the action message contains a "trajectory" field; 
     trajectory_msgs::JointTrajectory trajectory = goal->trajectory; // goal-> notation is annoying, so copy the important stuff to a shorter named var
 
     ros::Rate rate_timer(1/dt); //here is a timer, consistent with our chosen time step
@@ -126,41 +115,31 @@ void TrajectoryActionServer::executeCB(const actionlib::SimpleActionServer<traje
             q_next_jnts = trajectory.points[ipt_next].positions;
         }        
 
-        //if here, have valid range t_previous < t_stream < t_next
-        //COMMENT OUT THE NEXT LINE TO SEE COARSE TRAJECTORY WITHOUT INTERPOLATION       
+        //if here, have valid range t_previous < t_stream < t_next      
         fraction_of_range = (t_stream - t_previous)/(t_next - t_previous);
 
         //interpolate on the joint commands...linearly;  COULD BE BETTER, e.g. with splines
         for (int ijnt = 0; ijnt < njoints; ijnt++) {
            q_cmd_jnts[ijnt] = q_prev_jnts[ijnt] + fraction_of_range * (q_next_jnts[ijnt] - q_prev_jnts[ijnt]); //here is a vector of new joint commands;
         }
-         ROS_INFO("t_prev, t_stream, t_next, fraction = %f, %f, %f, %f",t_previous,t_stream,t_next,fraction_of_range);
-         ROS_INFO("q_prev, q_cmd, q_next: %f, %f, %f",q_prev_jnts[0],q_cmd_jnts[0],q_next_jnts[0]);
-        //command the joints:  this implementation will depend on the specific interface to the robot;
-        send_joint_commands_(q_cmd_jnts); // use helper function to encapsulate details of how to talk to the controller; 
+        ROS_INFO("t_prev, t_stream, t_next, fraction = %f, %f, %f, %f",t_previous,t_stream,t_next,fraction_of_range);
+        ROS_INFO("q_prev, q_cmd, q_next: %f, %f, %f",q_prev_jnts[0],q_cmd_jnts[0],q_next_jnts[0]);
+        send_joint_commands_(q_cmd_jnts);
         
         rate_timer.sleep();
         t_stream+=dt;
     }
-    // output the final point; WATCH OUT HERE...trajectory messages are allowed to list joint commands in any order, as specified in
-    // joint_names vector.  Further, it is generally allowed to specify commands for only a subset of joints (as listed in the joint_names vector),
-    // with the presumption that all joints not listed should maintain their most recently commanded values.
-    // I am shamelessly ignoring all of this, assuming joint commands are always specified for ALL joints, and that these commands are
-    // always in the same, fixed order
-    // This is a limitation if we want to control subsystems independently--e.g. hands on a steering wheel, vs feet on pedals, each
-    // following their own respective algorithms.  For a single robot arm, though, subsystem control is not useful.
     
     q_cmd_jnts = trajectory.points[npts-1].positions;
     send_joint_commands_(q_cmd_jnts);
-    //should populate result with something useful...
-         as_.setSucceeded(result_); // tell the client that we were successful acting on the request, and return the "result" message
+    as_.setSucceeded(result_); // tell the client that we were successful acting on the request, and return the "result" message
 }
 
 //the main program instantiates a TrajectoryActionServer, then lets the callbacks do all the work
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "trajectory_action_node"); // name this node 
+    ros::init(argc, argv, "trajectory_action_node");
 
-    ros::NodeHandle nh; // create a node handle; need to pass this to the class constructor
+    ros::NodeHandle nh;
 
     ROS_INFO("main: instantiating an object of type TrajectoryActionServer");
     TrajectoryActionServer as_object(&nh);
@@ -169,7 +148,7 @@ int main(int argc, char** argv) {
     ROS_INFO("going into spin");
 
     while (ros::ok()) {
-        ros::spinOnce(); //normally, can simply do: ros::spin(); ros::ok() makes this routine easy to kill with ctl-C
+        ros::spinOnce();
         ros::Duration(0.1).sleep();
     }
 

@@ -84,7 +84,6 @@ int main(int argc, char **argv) {
     effort_cmd_srv_msg.request.duration= duration;
 
     get_joint_state_srv_msg.request.joint_name = "joint1";
-    //double q1_des = 1.0;
     double q1_err, q2_err;    //added in error field for second joint
     double Kp = 40.0;
     double Kv = 3.0;
@@ -130,7 +129,6 @@ int main(int argc, char **argv) {
         joint_state_msg.velocity[0] = q1dot;
 		joint_state_publisher.publish(joint_state_msg);
         
-		//g_pos_cmd = sin(2 * PI * 1.0 * point_in_time * dt);     //frequency for joint1 is 1.0
 
         q1_err = g_pos_cmd - q1;
         if (q1_err > M_PI) {
@@ -170,7 +168,6 @@ int main(int argc, char **argv) {
         joint_state_msg2.velocity[0] = q2dot;
         joint_state_publisher.publish(joint_state_msg2);
 
-        //g_pos_cmd = sin(2 * PI * 1.5 * point_in_time * dt);  //frequency for joint2 is 1.5
 
         q2_err = g_pos_cmd - q2;
         if (q2_err > M_PI) {
