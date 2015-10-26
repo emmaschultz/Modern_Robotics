@@ -1,14 +1,24 @@
 #include <ros/ros.h>
 #include <Eigen/Eigen>
-#include <baxter_moves_library/NAMEOFFILE.h>   //TODO
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+#include <Eigen/Eigenvalues>
 
-using namespace std;
+#include <baxter_moves_library/my_interesting_moves.h>
 
-int main(int argc, char** argv){
-	ros::init(argc, argv, "baxter_moves_library_node");   //name this node
-	ros::NodeHandle nh;
+//constructor
+InterestingMoves::InterestingMoves(){
 
-	
-	
-	return 0;
+}
+
+void InterestingMoves::set_goal_wave(trajectory_msgs::JointTrajectory &des_trajectory){
+
+}
+
+void InterestingMoves::set_goal_do_the_robot(trajectory_msgs::JointTrajectory &des_trajectory){
+
+}
+
+void InterestingMoves::set_goal_high_five(trajectory_msgs::JointTrajectory &des_trajectory){
+
 }

@@ -41,11 +41,18 @@
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>catkin_simple</buildtool_depend>
   <build_depend>roscpp</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
   <build_depend>cmake_modules</build_depend>
   <build_depend>std_msgs</build_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>cmake_modules</run_depend>
+
+
+  <!-- NEED TO PUT ACTION LIB DEPENDENCIES IN HERE? -->
+
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->

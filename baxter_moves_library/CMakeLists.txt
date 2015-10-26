@@ -25,7 +25,7 @@ cs_add_library(my_interesting_moves src/my_interesting_moves.cpp)
 
 
 
-# cs_add_executable(example src/example.cpp)
+# cs_add_executable(exampleExecutables src/example.cpp)
 
 
 
