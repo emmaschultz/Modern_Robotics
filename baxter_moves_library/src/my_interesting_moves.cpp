@@ -24,6 +24,21 @@ InterestingMoves::InterestingMoves(ros::NodeHandle nh){
 void InterestingMoves::set_goal_wave(){
 	Vectorq7x1 q_wave_pose;
     q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
+    find_trajectory(q_wave_pose);
+}
+
+void InterestingMoves::set_goal_extend_arm(){
+
+}
+
+//maybe change this because it is essentially the same motion as a wave
+void InterestingMoves::set_goal_high_five(){
+
+}
+
+void find_and_send_trajectory(Vectorq7x1 position){
+	Vectorq7x1 q_pose;
+    q_pose << position;
     Eigen::VectorXd q_in_vecxd;
     Vectorq7x1 q_vec_right_arm;
     
@@ -33,9 +48,8 @@ void InterestingMoves::set_goal_wave(){
 
 
     ROS_INFO("warming up callbacks...");
-    for (int i=0;i<100;i++) {
+    for (int i = 0; i < 100; i++) {
         ros::spinOnce();
-        //cout<<"spin "<<i<<endl;
         ros::Duration(0.01).sleep();
     }
 
@@ -47,7 +61,7 @@ void InterestingMoves::set_goal_wave(){
     //push back the current pose of the robot, followed by the desired pose for the robot
     q_in_vecxd = q_vec_right_arm;
     des_path.push_back(q_in_vecxd);
-    q_in_vecxd = q_wave_pose;
+    q_in_vecxd = q_pose;
     des_path.push_back(q_in_vecxd);
 
     //convert this into a trajectory
@@ -59,7 +73,6 @@ void InterestingMoves::set_goal_wave(){
 	goal.trajectory = des_trajectory;
 
 	//initialize this node as an action client
-	//TODO can this go in the constructor?
 	actionlib::SimpleActionClient<baxter_traj_streamer::trajAction> action_client("trajActionServer", true);
 	ROS_INFO("waiting for server: ");
 	bool server_exists = action_client.waitForServer(ros::Duration(5.0));
@@ -80,13 +93,4 @@ void InterestingMoves::set_goal_wave(){
     action_client.sendGoal(goal);
 
     bool finished_before_timeout = action_client.waitForResult();  //wait forever for result
-}
-
-void InterestingMoves::set_goal_extend_arm(){
-
-}
-
-//maybe change this because it is essentially the same motion as a wave
-void InterestingMoves::set_goal_high_five(){
-
 }
