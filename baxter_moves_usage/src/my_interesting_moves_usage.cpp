@@ -4,19 +4,19 @@
 
 int main(int argc, char** argv){
 	ros::init(argc, argv, "interesting_moves_usage");   //this is the name of this node
-	ros::NodeHandle nh;
+	ros::NodeHandle nh;  //TODO is this necessary?
 
 
 	//create an instance of my InterestingMoves class
-	InterestingMoves interestingMoves;
+	InterestingMoves im(&nh);
 
 	//have the robot perform the following actions that are laid out in the class
-	interestingMoves.set_goal_wave(/* param goes here */);
+	im.set_goal_wave();
 	ROS_INFO("Wave complete.");
 
-	interestingMoves.set_goal_do_the_robot(/* param goes here */);
-	ROS_INFO("Dance complete.");
+	im.set_goal_extend_arm();
+	ROS_INFO("Motion complete.");
 
-	interestingMoves.set_goal_high_five(/* param goes here */);
+	im.set_goal_high_five();
 	ROS_INFO("High five complete.");
 }
