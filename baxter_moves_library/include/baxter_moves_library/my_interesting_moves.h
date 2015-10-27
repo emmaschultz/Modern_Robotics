@@ -13,25 +13,25 @@ public:
 
 	/**
 	 * This will give the baxter robot the command to wave its right arm
-	 * @param des_trajectory: 
 	 */
-	set_goal_wave(trajectory_msgs::JointTrajectory &des_trajectory);
+	set_goal_wave();
 
 	/**
 	 * This will give the baxter robot the command to do the robot dance move with its right arm
-	 * @param des_trajectory: 
 	 */
-	set_goal_do_the_robot(trajectory_msgs::JointTrajectory &des_trajectory);
+	set_goal_extend_arm();
 
 	/**
 	 * This will give the baxter robot the command to put its right arm out to receive a high five
-	 * @param des_trajectory: 
 	 */
-	set_goal_high_five(trajectory_msgs::JointTrajectory &des_trajectory);
+	set_goal_high_five();
 
 private:
-	//private member functions go here!
-
+	/**
+	 * This will calculate the trajectories and send the goal to the action server
+	 * @param position: the desired position for the robot to go to
+	 */
+	find_trajectory(Vectorq7x1 position);
 };
 
 #endif
