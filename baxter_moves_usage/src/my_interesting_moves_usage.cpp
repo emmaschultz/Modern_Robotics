@@ -12,11 +12,8 @@ int main(int argc, char** argv){
 
 	//have the robot perform the following actions that are laid out in the class
 	im.set_goal_wave();
-	ROS_INFO("Wave complete.");
 
-	im.set_goal_extend_arm();
-	ROS_INFO("Motion complete.");
+	//im.set_goal_extend_arm();
 
-	im.set_goal_high_five();
-	ROS_INFO("High five complete.");
+	//im.set_goal_high_five();
 }

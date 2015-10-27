@@ -25,15 +25,22 @@ void InterestingMoves::set_goal_wave(){
 	Vectorq7x1 q_wave_pose;
     q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
     find_trajectory(q_wave_pose);
+    ROS_INFO("Wave complete.");
 }
 
 void InterestingMoves::set_goal_extend_arm(){
-
+	Vectorq7x1 q_extend_arm_pose;
+    q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;//TODO
+    find_trajectory(q_extend_arm_pose);
+	ROS_INFO("Motion complete.");
 }
 
 //maybe change this because it is essentially the same motion as a wave
 void InterestingMoves::set_goal_high_five(){
-
+	Vectorq7x1 q_high_five_pose;
+    q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;//TODO
+    find_trajectory(q_high_five_pose);
+    ROS_INFO("High five complete.");
 }
 
 void find_and_send_trajectory(Vectorq7x1 position){
