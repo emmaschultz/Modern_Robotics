@@ -7,7 +7,6 @@ find_package(Eigen3 REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 add_definitions(${EIGEN_DEFINITIONS})
-
 catkin_simple()
 
 # example boost usage
@@ -17,22 +16,12 @@ catkin_simple()
 # SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # Libraries
-cs_add_library(my_interesting_moves src/my_interesting_moves.cpp)   
+cs_add_library(my_interesting_moves_lib src/my_interesting_moves.cpp)
 
 # Executables
+# cs_add_executable(my_interesting_moves_use src/my_interesting_moves_usage.cpp)
 
-
-
-
-
-# cs_add_executable(exampleExecutables src/example.cpp)
-
-
-
-#target_link_libraries(exampleExecutables ${catkin_LIBRARIES})
-
-
-
+target_link_libraries(my_interesting_moves_lib ${catkin_LIBRARIES})
 
 cs_install()
 cs_export()

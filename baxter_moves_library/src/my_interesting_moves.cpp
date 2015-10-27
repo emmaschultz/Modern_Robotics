@@ -7,10 +7,10 @@
 #include <actionlib/client/terminal_state.h>
 #include <baxter_traj_streamer/baxter_traj_streamer.h>
 #include <baxter_traj_streamer/trajAction.h>
-#include <Eigen/Eigen>
-#include <Eigen/Dense>
-#include <Eigen/Geometry>
-#include <Eigen/Eigenvalues>
+//#include <Eigen/Eigen>
+//#include <Eigen/Dense>
+//#include <Eigen/Geometry>
+//#include <Eigen/Eigenvalues>
 #include <baxter_moves_library/my_interesting_moves.h>
 
 ros::NodeHandle nh_;
@@ -24,26 +24,26 @@ InterestingMoves::InterestingMoves(ros::NodeHandle nh){
 void InterestingMoves::set_goal_wave(){
 	Vectorq7x1 q_wave_pose;
     q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
-    find_trajectory(q_wave_pose);
+    find_and_send_trajectory(q_wave_pose);
     ROS_INFO("Wave complete.");
 }
 
 void InterestingMoves::set_goal_extend_arm(){
 	Vectorq7x1 q_extend_arm_pose;
-    q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;//TODO
-    find_trajectory(q_extend_arm_pose);
+    q_extend_arm_pose << 0, 0, 0, 0, 0, 0, 0; //TODO
+    find_and_send_trajectory(q_extend_arm_pose);
 	ROS_INFO("Motion complete.");
 }
 
 //maybe change this because it is essentially the same motion as a wave
 void InterestingMoves::set_goal_high_five(){
 	Vectorq7x1 q_high_five_pose;
-    q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;//TODO
-    find_trajectory(q_high_five_pose);
+    q_high_five_pose << 0, 0, 0, 0, 0, 0, 0; //TODO
+    find_and_send_trajectory(q_high_five_pose);
     ROS_INFO("High five complete.");
 }
 
-void find_and_send_trajectory(Vectorq7x1 position){
+void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){
 	Vectorq7x1 q_pose;
     q_pose << position;
     Eigen::VectorXd q_in_vecxd;
@@ -51,7 +51,7 @@ void find_and_send_trajectory(Vectorq7x1 position){
     
     std::vector<Eigen::VectorXd> des_path;
     trajectory_msgs::JointTrajectory des_trajectory;
-    Baxter_traj_streamer baxter_traj_streamer(&nh);
+    Baxter_traj_streamer baxter_traj_streamer(&nh_);
 
 
     ROS_INFO("warming up callbacks...");
@@ -61,7 +61,7 @@ void find_and_send_trajectory(Vectorq7x1 position){
     }
 
     //find the current pose of the robot
-    ROS_INFO("getting current right arm pose")
+    ROS_INFO("getting current right arm pose");
     q_vec_right_arm =  baxter_traj_streamer.get_qvec_right_arm();
     ROS_INFO_STREAM("r_arm state: " << q_vec_right_arm.transpose());
 
@@ -86,9 +86,9 @@ void find_and_send_trajectory(Vectorq7x1 position){
 
 	if (!server_exists) {
         ROS_WARN("could not connect to server; will wait forever");
-        return 0; // bail out; optionally, could print a warning message and retry
+        return;
     }
-    server_exists = action_client.waitForServer(); //wait forever 
+    server_exists = action_client.waitForServer(); //wait forever
     ROS_INFO("connected to action server");  // if here, then we connected to the server;
 
     //give this goal an ID number

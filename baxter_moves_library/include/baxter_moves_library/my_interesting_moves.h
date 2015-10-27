@@ -9,7 +9,7 @@
 
 class InterestingMoves {
 public:
-	InterestingMoves();
+	InterestingMoves(ros::NodeHandle nh);
 
 	/**
 	 * This will give the baxter robot the command to wave its right arm

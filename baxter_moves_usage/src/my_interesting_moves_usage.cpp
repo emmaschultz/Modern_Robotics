@@ -1,5 +1,4 @@
 #include <ros/ros.h>
-#include <Eigen/Eigen>
 #include <baxter_moves_library/my_interesting_moves.h>
 
 int main(int argc, char** argv){
