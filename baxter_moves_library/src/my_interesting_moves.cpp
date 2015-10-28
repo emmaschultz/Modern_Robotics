@@ -39,7 +39,7 @@ void InterestingMoves::set_goal_high_five(){
     ROS_INFO("High five complete.");
 }
 
-void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Eigen::VectorXd
+void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Eigen::VectorXd instead
 	Vectorq7x1 q_pose;
     q_pose << position;
     Eigen::VectorXd q_in_vecxd;
@@ -81,10 +81,10 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Ei
 	bool server_exists = action_client.waitForServer(ros::Duration(5.0));
     //bool server_exists = action_client.waitForServer(ros::Duration(des_trajectory.points.time_from_start + 2.0));    //TODO does this work?
 	if (!server_exists) {
-        ROS_WARN("could not connect to server; will wait forever");
+        ROS_WARN("could not connect to server");
         return;
     }
-    server_exists = action_client.waitForServer(); //wait forever
+    //server_exists = action_client.waitForServer(); //wait forever
     ROS_INFO("connected to action server");  // if here, then we connected to the server;
 
     //give this goal an ID number
