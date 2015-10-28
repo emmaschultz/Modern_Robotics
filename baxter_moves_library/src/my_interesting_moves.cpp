@@ -7,10 +7,6 @@
 #include <actionlib/client/terminal_state.h>
 #include <baxter_traj_streamer/baxter_traj_streamer.h>
 #include <baxter_traj_streamer/trajAction.h>
-//#include <Eigen/Eigen>
-//#include <Eigen/Dense>
-//#include <Eigen/Geometry>
-//#include <Eigen/Eigenvalues>
 #include <baxter_moves_library/my_interesting_moves.h>
 
 ros::NodeHandle nh_;
