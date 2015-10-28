@@ -23,7 +23,7 @@ InterestingMoves::InterestingMoves(ros::NodeHandle nh){
 
 void InterestingMoves::set_goal_wave(){
 	Vectorq7x1 q_wave_pose;
-    q_wave_pose << -0.15761652577514648, 1.7345487739196779, -0.6262476559387208, -1.2486603599121096, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
+    q_wave_pose << -0.6262476559387208, -1.2486603599121096, -0.15761652577514648, 1.7345487739196779, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
     find_and_send_trajectory(q_wave_pose);
     ROS_INFO("Wave complete.");
 }
