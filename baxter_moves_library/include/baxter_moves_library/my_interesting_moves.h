@@ -12,6 +12,9 @@ typedef Eigen::Matrix<double, 7, 1> Vectorq7x1;
 
 class InterestingMoves {
 public:
+	ros::NodeHandle nh_;
+	int g_count;
+
 	InterestingMoves(ros::NodeHandle *nh);
 
 	/**
