@@ -7,9 +7,12 @@
 #include <Eigen/Geometry>
 #include <Eigen/Eigenvalues>
 
+typedef Eigen::Matrix<double, 6, 1> Vectorq6x1;
+typedef Eigen::Matrix<double, 7, 1> Vectorq7x1;
+
 class InterestingMoves {
 public:
-	InterestingMoves(ros::NodeHandle nh);
+	InterestingMoves(ros::NodeHandle *nh);
 
 	/**
 	 * This will give the baxter robot the command to wave its right arm

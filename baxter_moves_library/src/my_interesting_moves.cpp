@@ -17,8 +17,8 @@ ros::NodeHandle nh_;
 int g_count = 0;
 
 //constructor
-InterestingMoves::InterestingMoves(ros::NodeHandle nh){
-	nh_ = nh;
+InterestingMoves::InterestingMoves(ros::NodeHandle *nh){
+	nh_ = *nh;
 }
 
 void InterestingMoves::set_goal_wave(){
@@ -43,7 +43,7 @@ void InterestingMoves::set_goal_high_five(){
     ROS_INFO("High five complete.");
 }
 
-void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){
+void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Eigen::VectorXd
 	Vectorq7x1 q_pose;
     q_pose << position;
     Eigen::VectorXd q_in_vecxd;
@@ -83,7 +83,7 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){
 	actionlib::SimpleActionClient<baxter_traj_streamer::trajAction> action_client("trajActionServer", true);
 	ROS_INFO("waiting for server: ");
 	bool server_exists = action_client.waitForServer(ros::Duration(5.0));
-
+    //bool server_exists = action_client.waitForServer(ros::Duration(des_trajectory.points.time_from_start + 2.0));    //TODO does this work?
 	if (!server_exists) {
         ROS_WARN("could not connect to server; will wait forever");
         return;
