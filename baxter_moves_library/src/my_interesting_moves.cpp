@@ -1,5 +1,5 @@
 //this class is supposed to be an action client that sends action server (baxter_traj_streamer) a set of points and calculates the trajectories
-//it then takes that trajectory and executes it?
+//right_s0, right_s1, right_e0, right_e1, right_w0, right_w1, right_w2
 
 
 #include <ros/ros.h>
@@ -26,15 +26,15 @@ void InterestingMoves::set_goal_wave(){
 
 void InterestingMoves::set_goal_extend_arm(){
 	Vectorq7x1 q_extend_arm_pose;
-    q_extend_arm_pose << 0, 0, 0, 0, 0, 0, 0; //TODO
+    q_extend_arm_pose << 0, 0, 0, 0, 0, 0, 0;
     find_and_send_trajectory(q_extend_arm_pose);
 	ROS_INFO("Motion complete.");
 }
 
-//maybe change this because it is essentially the same motion as a wave
+//TODO change the name of this method
 void InterestingMoves::set_goal_high_five(){
 	Vectorq7x1 q_high_five_pose;
-    q_high_five_pose << 0, 0, 0, 0, 0, 0, 0; //TODO
+    q_high_five_pose << 0, 0, 3.14, 1, 0, 0, 0; //shoulder0, shoulder1, rotationElbow, bendElbow
     find_and_send_trajectory(q_high_five_pose);
     ROS_INFO("High five complete.");
 }
