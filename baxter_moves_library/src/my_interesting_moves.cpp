@@ -9,7 +9,7 @@
 #include <baxter_traj_streamer/trajAction.h>
 #include <baxter_moves_library/my_interesting_moves.h>
 
-ros::NodeHandle nh_;
+//ros::NodeHandle nh_;
 int g_count = 0;
 
 //constructor
@@ -97,3 +97,12 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Ei
 
     bool finished_before_timeout = action_client.waitForResult();  //wait forever for result
 }
+
+/*
+int main(int argc, char** argv){
+	//ros::init(argc, argv, "interesting_moves_library");
+	//ros::NodeHandle nh_;
+
+	return 1;
+}
+*/
