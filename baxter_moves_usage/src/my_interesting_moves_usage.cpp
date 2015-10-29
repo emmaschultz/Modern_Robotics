@@ -15,4 +15,6 @@ int main(int argc, char** argv){
 	//im.set_goal_extend_arm();
 
 	//im.set_goal_high_five();
+
+	return 0;
 }
