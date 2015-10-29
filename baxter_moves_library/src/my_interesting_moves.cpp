@@ -29,7 +29,7 @@ void InterestingMoves::set_goal_extend_arm()
 void InterestingMoves::set_goal_bend_arm()
 {
     Vectorq7x1 q_bend_arm_pose;
-    q_bend_arm_pose << 0, 0, 3.14, 1.5, 0, 0, 0;
+    q_bend_arm_pose << 0, 0, 3.14, 1.5, 1, 0, 0;
     find_and_send_trajectory(q_bend_arm_pose);
     ROS_INFO("Wave complete.");
 }
@@ -37,11 +37,11 @@ void InterestingMoves::set_goal_bend_arm()
 void InterestingMoves::set_goal_wave_hand()
 {
     Vectorq7x1 q_wave_hand_pose;
-    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, 0.5, 0;  // shoulder0, shoulder1, rotationElbow, bendElbow
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;  // shoulder0, shoulder1, rotationElbow, bendElbow
     find_and_send_trajectory(q_wave_hand_pose);
-    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, -0.5, 0;
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, 0, 0;
     find_and_send_trajectory(q_wave_hand_pose);
-    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, 0.5, 0;
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;
     find_and_send_trajectory(q_wave_hand_pose);
     ROS_INFO("High five complete.");
 }
