@@ -1,6 +1,6 @@
 # Baxter Moves Usage
 
-The code in this package works in conjuction with the code contained in the baxter_moves_library package. 
+The code in this package works in conjuction with the code contained in the baxter_moves_library package. This package contains a file that uses the library in baxter_moves_library to make baxter do a set of pre-defined motions.
 
 ## Example usage
 In order to run this code, please complete the following commands all in their own terminals:
