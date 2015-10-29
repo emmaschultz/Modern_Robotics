@@ -9,19 +9,11 @@
 #include <baxter_traj_streamer/trajAction.h>
 #include <baxter_moves_library/my_interesting_moves.h>
 
-//ros::NodeHandle nh_;
 int g_count = 0;
 
 //constructor
 InterestingMoves::InterestingMoves(ros::NodeHandle *nh){
 	nh_ = *nh;
-}
-
-void InterestingMoves::set_goal_wave(){
-	Vectorq7x1 q_wave_pose;
-    q_wave_pose << -0.6262476559387208, -1.2486603599121096, -0.15761652577514648, 1.7345487739196779, 2.9287528159240726, 1.9642623966430666, -0.48013598605957036;
-    find_and_send_trajectory(q_wave_pose);
-    ROS_INFO("Wave complete.");
 }
 
 void InterestingMoves::set_goal_extend_arm(){
@@ -31,11 +23,21 @@ void InterestingMoves::set_goal_extend_arm(){
 	ROS_INFO("Motion complete.");
 }
 
-//TODO change the name of this method
-void InterestingMoves::set_goal_high_five(){
-	Vectorq7x1 q_high_five_pose;
-    q_high_five_pose << 0, 0, 3.14, 1, 0, 0, 0; //shoulder0, shoulder1, rotationElbow, bendElbow
-    find_and_send_trajectory(q_high_five_pose);
+void InterestingMoves::set_goal_bend_arm(){
+	Vectorq7x1 q_bend_arm_pose;
+    q_bend_arm_pose << 0, 0, 3.14, 1.5, 0, 0, 0;
+    find_and_send_trajectory(q_bend_arm_pose);
+    ROS_INFO("Wave complete.");
+}
+
+void InterestingMoves::set_goal_wave_hand(){
+	Vectorq7x1 q_wave_hand_pose;
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, 0.5, 0; //shoulder0, shoulder1, rotationElbow, bendElbow
+    find_and_send_trajectory(q_wave_hand_pose);
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, -0.5, 0;
+    find_and_send_trajectory(q_wave_hand_pose);
+    q_wave_hand_pose << 0, 0, 3.14, 1.5, 0, 0.5, 0;
+    find_and_send_trajectory(q_wave_hand_pose);
     ROS_INFO("High five complete.");
 }
 
@@ -97,12 +99,3 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position){   //use Ei
 
     bool finished_before_timeout = action_client.waitForResult();  //wait forever for result
 }
-
-/*
-int main(int argc, char** argv){
-	//ros::init(argc, argv, "interesting_moves_library");
-	//ros::NodeHandle nh_;
-
-	return 1;
-}
-*/

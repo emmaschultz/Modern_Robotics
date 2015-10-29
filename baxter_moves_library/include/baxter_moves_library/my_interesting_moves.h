@@ -18,30 +18,23 @@ public:
 	InterestingMoves(ros::NodeHandle *nh);
 
 	/**
-	 * This will give the baxter robot the command to wave its right arm
-	 */
-	void set_goal_wave();
-
-	/**
-	 * This will give the baxter robot the command to do the robot dance move with its right arm
+	 * This will give the baxter robot the command to extend its right arm
 	 */
 	void set_goal_extend_arm();
 
 	/**
-	 * This will give the baxter robot the command to put its right arm out to receive a high five
+	 * This will give the baxter robot the command to bend its right elbow
 	 */
-	void set_goal_high_five();
+	void set_goal_bend_arm();
 
 	/**
-	 * This will initialize the node
-	 * @param argc: 
-	 * @param argv: 
+	 * This will give the baxter robot the command to bend its right wrist in a waving motion
 	 */
-	//int main(int argc, char** argv);
+	void set_goal_wave_hand();
 
 private:
 	/**
-	 * This will calculate the trajectories and send the goal to the action server
+	 * This will calculate the trajectories and send the goal trajectory to the action server
 	 * @param position: the desired position for the robot to go to
 	 */
 	void find_and_send_trajectory(Vectorq7x1 position);
