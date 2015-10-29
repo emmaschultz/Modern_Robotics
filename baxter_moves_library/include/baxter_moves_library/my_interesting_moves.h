@@ -32,6 +32,13 @@ public:
 	 */
 	void set_goal_high_five();
 
+	/**
+	 * This will initialize the node
+	 * @param argc: 
+	 * @param argv: 
+	 */
+	//int main(int argc, char** argv);
+
 private:
 	/**
 	 * This will calculate the trajectories and send the goal to the action server
