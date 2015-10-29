@@ -19,9 +19,9 @@ catkin_simple()
 cs_add_library(my_interesting_moves_lib src/my_interesting_moves.cpp)
 
 # Executables
-# cs_add_executable(my_interesting_moves_use src/my_interesting_moves_usage.cpp)
+# cs_add_executable(my_interesting_moves src/my_interesting_moves.cpp)
 
-# target_link_libraries(my_interesting_moves_lib ${catkin_LIBRARIES})
+# target_link_libraries(my_interesting_moves my_interesting_moves_lib ${catkin_LIBRARIES})
 
 cs_install()
 cs_export()
