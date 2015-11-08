@@ -13,6 +13,6 @@ In order to run this code, please complete the following commands all in their o
 
 `rosrun baxter_tools enable_robot.py -e`
 
-`rosrun baxter_moves_usage my interesting_moves_usage`
+`rosrun baxter_moves_usage my_interesting_moves_usage`
 
     
