@@ -6,11 +6,12 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 #include <baxter_traj_streamer/baxter_traj_streamer.h>
-#include <baxter_traj_streamer/trajAction.h>
+//#include <baxter_traj_streamer/trajAction.h>
+#include <cwru_action/trajAction.h>
 #include <baxter_moves_library/my_interesting_moves.h>
 #include <vector>
 
-int g_count = 0;
+// int g_count = 0;
 
 // constructor
 InterestingMoves::InterestingMoves(ros::NodeHandle *nh)
@@ -81,11 +82,13 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position)
     baxter_traj_streamer.stuff_trajectory(des_path, des_trajectory);
 
     // copy this trajectory into a goal message
-    baxter_traj_streamer::trajGoal goal;
+    // baxter_traj_streamer::trajGoal goal;
+    cwru_action::trajGoal goal;
     goal.trajectory = des_trajectory;
 
     // initialize this node as an action client
-    actionlib::SimpleActionClient<baxter_traj_streamer::trajAction> action_client("trajActionServer", true);
+    // actionlib::SimpleActionClient<baxter_traj_streamer::trajAction> action_client("trajActionServer", true);
+    actionlib::SimpleActionClient<cwru_action::trajAction> action_client("trajActionServer", true);
     ROS_INFO("waiting for server: ");
     bool server_exists = action_client.waitForServer(ros::Duration(5.0));
     if (!server_exists)
@@ -97,9 +100,9 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position)
     ROS_INFO("connected to action server");  // if here, then we connected to the server;
 
     // give this goal an ID number
-    g_count++;
-    goal.traj_id = g_count;
-    ROS_INFO("sending traj_id %d", g_count);
+    // g_count++;
+    // goal.traj_id = g_count;
+    // ROS_INFO("sending traj_id %d", g_count);
 
     // send the goal to the server
     action_client.sendGoal(goal);

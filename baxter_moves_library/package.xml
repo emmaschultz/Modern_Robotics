@@ -45,6 +45,7 @@
   <build_depend>actionlib</build_depend>
   <build_depend>simple_action_client</build_depend>
   <build_depend>baxter_traj_streamer</build_depend>
+  <build_depend>cwru_action</build_depend>
   <build_depend>trajectory_msgs</build_depend>
   <build_depend>cmake_modules</build_depend>
   <build_depend>std_msgs</build_depend>
@@ -53,6 +54,7 @@
   <run_depend>actionlib</run_depend>
   <run_depend>simple_action_client</run_depend>
   <run_depend>baxter_traj_streamer</run_depend>
+  <run_depend>cwru_action</run_depend>
   <run_depend>trajectory_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>cmake_modules</run_depend>
