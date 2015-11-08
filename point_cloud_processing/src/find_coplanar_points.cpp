@@ -24,5 +24,8 @@ int main(int argc, char** argv)
     // use these selected points to find coplanar points (by using cwru_pcl_utils function)
     // select all coplanar points in rviz (do this by publishing those points?)
 
+
+    // see cwru_pcl_utils_example_main.cpp for how to do the above steps!!!
+
 	return 0;
 }
