@@ -39,18 +39,8 @@ void InterestingMoves::set_goal_wave_hand()
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;  // shoulder0, shoulder1, rotationElbow, bendElbow
     find_and_send_trajectory(q_wave_hand_pose);
 
-    for(int i = 0; i < 100; i++)
-    {
-        // pause before moving again
-    }
-
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, 0, 0;
     find_and_send_trajectory(q_wave_hand_pose);
-
-    for(int i = 0; i < 100; i++)
-    {
-        // pause before moving again
-    }
 
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;
     find_and_send_trajectory(q_wave_hand_pose);
@@ -112,4 +102,6 @@ void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position)
     action_client.sendGoal(goal);
 
     bool finished_before_timeout = action_client.waitForResult();  // wait forever for result
+
+    ros::Duration(2.0).sleep();
 }
