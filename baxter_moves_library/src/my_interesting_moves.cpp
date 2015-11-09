@@ -38,11 +38,24 @@ void InterestingMoves::set_goal_wave_hand()
     Vectorq7x1 q_wave_hand_pose;
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;  // shoulder0, shoulder1, rotationElbow, bendElbow
     find_and_send_trajectory(q_wave_hand_pose);
+
+    for(int i = 0; i < 100; i++)
+    {
+        // pause before moving again
+    }
+
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, 0, 0;
     find_and_send_trajectory(q_wave_hand_pose);
+
+    for(int i = 0; i < 100; i++)
+    {
+        // pause before moving again
+    }
+
     q_wave_hand_pose << 0, 0, 3.14, 1.5, 1, -1, 0;
     find_and_send_trajectory(q_wave_hand_pose);
-    ROS_INFO("Wave five complete.");
+
+    ROS_INFO("Wave complete.");
 }
 
 void InterestingMoves::find_and_send_trajectory(Vectorq7x1 position)
