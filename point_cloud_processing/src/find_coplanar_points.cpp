@@ -11,7 +11,7 @@ int main(int argc, char** argv)
     // when this is instantiated, it initializes necessary subscribers (ex: subscriber to selected rviz points)
     CwruPclUtils pcl_utils(&nh);
 
-    Eigen::Afine3f meow // TODO rename this
+    Eigen::Affine3f meow; // TODO rename this
 
     while(ros::ok()) {
         if(pcl_utils.got_selected_points()) {
