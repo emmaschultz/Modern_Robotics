@@ -10,6 +10,19 @@ int main(int argc, char** argv)
     // create instance of cwru_pcl_utils library
     // when this is instantiated, it initializes necessary subscribers (ex: subscriber to selected rviz points)
     CwruPclUtils pcl_utils(&nh);
+    
+    // wait for a point cloud
+    while(!pcl_utils.got_kinect_cloud()) {
+        ROS_INFO("did not receive point cloud.");
+        ros::spinOnce();
+        ros::Duration(1.0).sleep();
+    }
+
+    ROS_INFO("Got a point cloud. Now saving point cloud.");
+    pcl_utils.save_kinect_snapshot();
+    pcl_utils.save_kinect_clr_snapshot();
+
+    ros::Publisher pubCloud = nh.
 
     Eigen::Affine3f meow; // TODO rename this
 
