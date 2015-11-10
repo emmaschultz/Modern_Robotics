@@ -1,6 +1,6 @@
 #include <ros/ros.h>
-#include <cwru_pcl_utils/cwru_pcl_utils.h>
-
+//#include <cwru_pcl_utils/cwru_pcl_utils.h>
+#include <my_pcl_utils/my_pcl_utils.h>
 
 int main(int argc, char** argv)
 {
@@ -12,18 +12,6 @@ int main(int argc, char** argv)
     CwruPclUtils pcl_utils(&nh);
     
     // wait for a point cloud
-    while(!pcl_utils.got_kinect_cloud()) {
-        ROS_INFO("did not receive point cloud.");
-        ros::spinOnce();
-        ros::Duration(1.0).sleep();
-    }
-
-    ROS_INFO("Got a point cloud. Now saving point cloud.");
-    pcl_utils.save_kinect_snapshot();
-    pcl_utils.save_kinect_clr_snapshot();
-
-    ros::Publisher pubCloud = nh.
-
     while(!pcl_utils.got_kinect_cloud()){
     	ROS_INFO("did not receive point cloud yet.");
     	ros::spinOnce();
@@ -79,7 +67,7 @@ int main(int argc, char** argv)
             pcl_utils.fit_xformed_selected_pts_to_plane(plane_normal, plane_dist);
             ROS_INFO_STREAM("normal: " << plane_normal.transpose() << "\ndist: " << plane_dist);
 
-            //PUT IN FUNCTION FOR FINDING COPLANAR POINTS HERE
+            pcl_utils.find_coplanar_points();
 
             pcl_utils.get_gen_purpose_cloud(display_cloud);
         }
@@ -97,5 +85,5 @@ int main(int argc, char** argv)
 
     ROS_INFO("All done!");
 
-	return 0;
+    return 0;
 }

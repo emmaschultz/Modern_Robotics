@@ -19,7 +19,8 @@ catkin_simple()
 
 # Executables
 cs_add_executable(find_coplanar_points src/find_coplanar_points.cpp)
-target_link_libraries(find_coplanar_points cwru_pcl_utils ${catkin_LIBRARIES})
+#target_link_libraries(find_coplanar_points cwru_pcl_utils ${catkin_LIBRARIES})
+target_link_libraries(find_coplanar_points my_pcl_utils ${catkin_LIBRARIES})
 
 cs_install()
 cs_export()
