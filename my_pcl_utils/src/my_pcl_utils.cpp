@@ -250,7 +250,7 @@ void MyPclUtils::find_coplanar_points() {
     Eigen::Vector3f centroid;
     centroid = compute_centroid(pclTransformedSelectedPoints_ptr_);
 
-    int npts = pclTransformedSelectedPoints_ptr_->points.size();
+    int npts = pclTransformed_ptr_->points.size();
     ROS_INFO_STREAM("There are " << npts << " points.\n");
 
     pclGenPurposeCloud_ptr_->points.resize(npts);
@@ -262,10 +262,12 @@ void MyPclUtils::find_coplanar_points() {
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[0].z = " << pclTransformedSelectedPoints_ptr_->points[0].z);
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[1].z = " << pclTransformedSelectedPoints_ptr_->points[1].z);
     */
-    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[0].z);
-    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[1].z);
+    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[0].getVector3fMap()[2]);
+    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[1].getVector3fMap()[2]);
 
-    int count = 0;
+    //int count = 0;
+
+    pclGenPurposeCloud_ptr_->points.clear();
 
     for(int i = 0; i < npts; ++i){
         // if points from kinect sensor have the same z coordinate (with a tolerance) as the centroid of the plane, then they are coplanar
@@ -275,12 +277,15 @@ void MyPclUtils::find_coplanar_points() {
         //    count++;
         //}
 
-        if(((centroid[2] - 0.1) < pclTransformed_ptr_->points[i].z) && (pclTransformed_ptr_->points[i].z < (centroid[2] + 0.1))) {
-            pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformed_ptr_->points[i].getVector3fMap();
-            count++;
+        if(((centroid[2] - 0.05) < (pclTransformed_ptr_->points[i].getVector3fMap()[2])) && ((pclTransformed_ptr_->points[i].getVector3fMap()[2]) < (centroid[2] + 0.05))) {
+            //pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformed_ptr_->points[i].getVector3fMap();
+            pclGenPurposeCloud_ptr_->points.push_back(pclTransformed_ptr_->points[i]);
+            //count++;
+            ROS_INFO_STREAM("size: "<< pclGenPurposeCloud_ptr_->points.size());
         }
+       // ROS_INFO_STREAM("size: "<< pclGenPurposeCloud_ptr_->points.size());
 
-        //pclTransformed_ptr_
+        //pclGenPurposeCloud_ptr_->points.resize(count);
     }
 }
 
