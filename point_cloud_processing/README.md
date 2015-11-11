@@ -11,5 +11,5 @@ In order to run this code, you must run the following commands:
 
 `rosrun point_cloud_processing find_coplanar_points`
 
-`rosrun rviz rviz` (and set display to see kinect/depth/points)
+`rosrun rviz rviz` (and set display to see kinect/depth/points and /pcl_cloud_display)
     
