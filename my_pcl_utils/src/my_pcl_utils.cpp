@@ -217,19 +217,19 @@ void MyPclUtils::get_transformed_selected_points(pcl::PointCloud<pcl::PointXYZ> 
 }
 
 //same as above, but for general-purpose cloud
-void MyPclUtils::get_gen_purpose_cloud(pcl::PointCloud<pcl::PointXYZ> & outputCloud ) {
+void MyPclUtils::get_gen_purpose_cloud(pcl::PointCloud<pcl::PointXYZ> & outputCloud) {
     int npts = pclGenPurposeCloud_ptr_->points.size(); //how many points to extract?
     outputCloud.header = pclGenPurposeCloud_ptr_->header;
     outputCloud.is_dense = pclGenPurposeCloud_ptr_->is_dense;
     outputCloud.width = npts;
     outputCloud.height = 1;
 
-    cout << "copying cloud w/ npts =" << npts << endl;
+    ROS_INFO_STREAM("copying cloud w/ npts = " << npts << "\n");
     outputCloud.points.resize(npts);
-    for (int i = 0; i < npts; ++i) {
-        outputCloud.points[i].getVector3fMap() = pclGenPurposeCloud_ptr_->points[i].getVector3fMap();   
+    for (int i = 0; i < npts; i++) {
+        outputCloud.points[i].getVector3fMap() = pclGenPurposeCloud_ptr_->points[i].getVector3fMap();
     }    
-} 
+}
 
 //here is an example utility function.  It operates on clouds that are member variables, and it puts its result
 // in the general-purpose cloud variable, which can be acquired by main(), if desired, using get_gen_purpose_cloud()
@@ -247,75 +247,33 @@ void MyPclUtils::example_pcl_operation() {
 }
 
 void MyPclUtils::find_coplanar_points() {
-    ROS_INFO("you  have entered find coplanar points function");
     Eigen::Vector3f centroid;
     centroid = compute_centroid(pclTransformedSelectedPoints_ptr_);
-    ROS_INFO("computed the centroid");
 
     int npts = pclTransformedSelectedPoints_ptr_->points.size();
     ROS_INFO_STREAM("There are " << npts << " points.\n");
-    copy_cloud(pclTransformedSelectedPoints_ptr_, pclGenPurposeCloud_ptr_);
+    //copy_cloud(pclTransformedSelectedPoints_ptr_, pclGenPurposeCloud_ptr_);
 
+    pclGenPurposeCloud_ptr_->points.resize(npts);
+
+    /*
     ROS_INFO_STREAM("centroid[0] = " << centroid[0]);
     ROS_INFO_STREAM("centroid[1] = " << centroid[1]);
     ROS_INFO_STREAM("centroid[2] = " << centroid[2]);
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[0].z = " << pclTransformedSelectedPoints_ptr_->points[0].z);
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[1].z = " << pclTransformedSelectedPoints_ptr_->points[1].z);
+    */
 
     int count = 0;
 
     for(int i = 0; i < npts; ++i){
-        ROS_INFO_STREAM("you have entered the loop and i = " << i);
         // if points from kinect sensor have the same z coordinate (with a 5cm tolerance) as the centroid of the plane, then they are coplanar
         // copies over all points determined to be coplanar into pclGenPurposeCloud_ptr_
         if(((centroid[2] - 0.05) < pclTransformedSelectedPoints_ptr_->points[i].z) && (pclTransformedSelectedPoints_ptr_->points[i].z < (centroid[2] + 0.05))) {
-            ROS_INFO_STREAM("you have entered the if statement.");
-            count++;
-
             pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
-
-            //not working because i is not where you want to place these because i could be 1 then 3 then 10
-            //pclGenPurposeCloud_ptr_->points[i].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
-            ROS_INFO("you have transferred over the point to a new point cloud");
+            count++;
         }
-        ROS_INFO("you have exited the if");
-
-        //if((pclTransformedSelectedPoints_ptr_->points[i].z < (centroid[2] + 0.05)) && (pclTransformedSelectedPoints_ptr_->points[i].z > (centroid[2] - 0.05))) {
-        //    pclGenPurposeCloud_ptr_->points[i].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
-        //}
     }
-
-    ROS_INFO("you have exited the loop");
-
-
-
-
-
-
-
-
-    /*
-    copy_cloud(pclTransformedSelectedPoints_ptr_, pclGenPurposeCloud_ptr_);
-
-    for(int i = 0; i < npts; ++i){
-        // if points from kinect sensor have the same z coordinate as the centroid of the plane, then they are coplanar
-        if(pclGenPurposeCloud_ptr_->points[i].z == centroid[2]) {
-            pclGenPurposeCloud_ptr2_->points[i].getVector3fMap() = pclGenPurposeCloud_ptr_->points[i].getVector3fMap();
-        }
-
-        copy_cloud()
-
-
-        //if(pclTransformedSelectedPoints_ptr_->points[i].z == centroid[2]){}
-
-//create new pcl pointer within method
-//copy over all coplanar points into this ptr
-//use copy_cloud() to put these points into pclGenPurposeCloud_ptr_
-
-
-    }
-
-*/
 }
 
 
@@ -331,7 +289,7 @@ void MyPclUtils::copy_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, PointClou
 
     ROS_INFO_STREAM("copying cloud w/ npts = " << npts << "\n");
     outputCloud->points.resize(npts);
-    for (int i = 0; i < npts; ++i) {
+    for (int i = 0; i < npts; i++) {
         outputCloud->points[i].getVector3fMap() = inputCloud->points[i].getVector3fMap();
     }
 }

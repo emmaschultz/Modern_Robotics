@@ -56,19 +56,16 @@ int main(int argc, char** argv)
     // transform data to be relative to the torso frame and then save this data
     pcl_utils.transform_kinect_cloud(A_sensor_wrt_torso);
     pcl_utils.save_transformed_kinect_snapshot();
-    ROS_INFO("saved transform");
 
     Eigen::Vector3f plane_normal;
     double plane_dist;
     ROS_INFO("entering while loop...");
     while(ros::ok()) {
-        ROS_INFO("you have entered the loop");
         if(pcl_utils.got_selected_points()) {
-            ROS_INFO("received selected points");
+
             pcl_utils.transform_selected_points_cloud(A_sensor_wrt_torso);
-            ROS_INFO("transformed selected point cloud");
+
             pcl_utils.reset_got_selected_points();
-            ROS_INFO("reset the selected points");
 
             // finds what plane the selected points are in
             pcl_utils.fit_xformed_selected_pts_to_plane(plane_normal, plane_dist);
@@ -82,6 +79,7 @@ int main(int argc, char** argv)
         // convert point cloud to be compatible for ros msg and update the time stamp
         pcl::toROSMsg(display_cloud, pcl2_display_cloud);
         pcl2_display_cloud.header.stamp = ros::Time::now();
+        pcl2_display_cloud.header.frame_id = "torso";
 
         // publish the point cloud containing all coplanar points
         pubCloud.publish(pcl2_display_cloud);
