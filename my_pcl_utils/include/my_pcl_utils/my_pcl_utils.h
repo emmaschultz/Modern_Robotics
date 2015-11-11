@@ -112,7 +112,7 @@ private:
     pcl::PointCloud<pcl::PointXYZ>::Ptr pclSelectedPoints_ptr_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr pclTransformedSelectedPoints_ptr_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr pclGenPurposeCloud_ptr_;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pclGenPurposeCloud_ptr2_;
+    //pcl::PointCloud<pcl::PointXYZ>::Ptr pclGenPurposeCloud_ptr2_;
     
     bool got_kinect_cloud_;
     bool got_selected_points_;
