@@ -1,5 +1,4 @@
 #include <ros/ros.h>
-//#include <cwru_pcl_utils/cwru_pcl_utils.h>
 #include <my_pcl_utils/my_pcl_utils.h>
 
 int main(int argc, char** argv)
@@ -9,7 +8,6 @@ int main(int argc, char** argv)
     
     // create instance of cwru_pcl_utils library
     // when this is instantiated, it initializes necessary subscribers (ex: subscriber to selected rviz points)
-    //CwruPclUtils pcl_utils(&nh);
     MyPclUtils pcl_utils(&nh);
     
     // wait for a point cloud
@@ -59,7 +57,7 @@ int main(int argc, char** argv)
 
     Eigen::Vector3f plane_normal;
     double plane_dist;
-    ROS_INFO("entering while loop...");
+    ROS_INFO("waiting for selected points...");
     while(ros::ok()) {
         if(pcl_utils.got_selected_points()) {
 

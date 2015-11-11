@@ -255,37 +255,12 @@ void MyPclUtils::find_coplanar_points() {
 
     pclGenPurposeCloud_ptr_->points.resize(npts);
 
-    /*
-    ROS_INFO_STREAM("centroid[0] = " << centroid[0]);
-    ROS_INFO_STREAM("centroid[1] = " << centroid[1]);
-    ROS_INFO_STREAM("centroid[2] = " << centroid[2]);
-    ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[0].z = " << pclTransformedSelectedPoints_ptr_->points[0].z);
-    ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[1].z = " << pclTransformedSelectedPoints_ptr_->points[1].z);
-    */
-    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[0].getVector3fMap()[2]);
-    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[1].getVector3fMap()[2]);
-
-    //int count = 0;
-
     pclGenPurposeCloud_ptr_->points.clear();
 
     for(int i = 0; i < npts; ++i){
-        // if points from kinect sensor have the same z coordinate (with a tolerance) as the centroid of the plane, then they are coplanar
-        // copies over all points determined to be coplanar into pclGenPurposeCloud_ptr_
-        //if(((centroid[2] - 0.05) < pclTransformedSelectedPoints_ptr_->points[i].z) && (pclTransformedSelectedPoints_ptr_->points[i].z < (centroid[2] + 0.05))) {
-        //    pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
-        //    count++;
-        //}
-
         if(((centroid[2] - 0.05) < (pclTransformed_ptr_->points[i].getVector3fMap()[2])) && ((pclTransformed_ptr_->points[i].getVector3fMap()[2]) < (centroid[2] + 0.05))) {
-            //pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformed_ptr_->points[i].getVector3fMap();
             pclGenPurposeCloud_ptr_->points.push_back(pclTransformed_ptr_->points[i]);
-            //count++;
-            ROS_INFO_STREAM("size: "<< pclGenPurposeCloud_ptr_->points.size());
         }
-       // ROS_INFO_STREAM("size: "<< pclGenPurposeCloud_ptr_->points.size());
-
-        //pclGenPurposeCloud_ptr_->points.resize(count);
     }
 }
 
