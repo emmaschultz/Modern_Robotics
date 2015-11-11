@@ -9,7 +9,8 @@ int main(int argc, char** argv)
     
     // create instance of cwru_pcl_utils library
     // when this is instantiated, it initializes necessary subscribers (ex: subscriber to selected rviz points)
-    CwruPclUtils pcl_utils(&nh);
+    //CwruPclUtils pcl_utils(&nh);
+    MyPclUtils pcl_utils(&nh);
     
     // wait for a point cloud
     while(!pcl_utils.got_kinect_cloud()){
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
     	try {
     		tf_listener.lookupTransform("torso", "kinect_pc_frame", ros::Time(0), tf_sensor_frame_to_torso_frame);
     	} catch(tf::TransformException &exception) {
-    		ROS_ERROR("%s", exception.what());
+            ROS_ERROR("%s", exception.what());
     		tferr = true;
     		ros::Duration(0.5).sleep();
     		ros::spinOnce();
@@ -55,17 +56,23 @@ int main(int argc, char** argv)
     // transform data to be relative to the torso frame and then save this data
     pcl_utils.transform_kinect_cloud(A_sensor_wrt_torso);
     pcl_utils.save_transformed_kinect_snapshot();
+    ROS_INFO("saved transform");
 
     Eigen::Vector3f plane_normal;
     double plane_dist;
+    ROS_INFO("entering while loop...");
     while(ros::ok()) {
+        ROS_INFO("you have entered the loop");
         if(pcl_utils.got_selected_points()) {
+            ROS_INFO("received selected points");
             pcl_utils.transform_selected_points_cloud(A_sensor_wrt_torso);
+            ROS_INFO("transformed selected point cloud");
             pcl_utils.reset_got_selected_points();
+            ROS_INFO("reset the selected points");
 
             // finds what plane the selected points are in
             pcl_utils.fit_xformed_selected_pts_to_plane(plane_normal, plane_dist);
-            ROS_INFO_STREAM("normal: " << plane_normal.transpose() << "\ndist: " << plane_dist);
+            ROS_INFO_STREAM("normal: " << plane_normal.transpose() << "dist: " << plane_dist);
 
             pcl_utils.find_coplanar_points();
 
