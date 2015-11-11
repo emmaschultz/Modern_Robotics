@@ -252,7 +252,6 @@ void MyPclUtils::find_coplanar_points() {
 
     int npts = pclTransformedSelectedPoints_ptr_->points.size();
     ROS_INFO_STREAM("There are " << npts << " points.\n");
-    //copy_cloud(pclTransformedSelectedPoints_ptr_, pclGenPurposeCloud_ptr_);
 
     pclGenPurposeCloud_ptr_->points.resize(npts);
 
@@ -263,16 +262,25 @@ void MyPclUtils::find_coplanar_points() {
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[0].z = " << pclTransformedSelectedPoints_ptr_->points[0].z);
     ROS_INFO_STREAM("pclTransformedSelectedPoints_ptr_->points[1].z = " << pclTransformedSelectedPoints_ptr_->points[1].z);
     */
+    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[0].z);
+    ROS_INFO_STREAM("pclTransformed_ptr_ = " << pclTransformed_ptr_->points[1].z);
 
     int count = 0;
 
     for(int i = 0; i < npts; ++i){
-        // if points from kinect sensor have the same z coordinate (with a 5cm tolerance) as the centroid of the plane, then they are coplanar
+        // if points from kinect sensor have the same z coordinate (with a tolerance) as the centroid of the plane, then they are coplanar
         // copies over all points determined to be coplanar into pclGenPurposeCloud_ptr_
-        if(((centroid[2] - 0.05) < pclTransformedSelectedPoints_ptr_->points[i].z) && (pclTransformedSelectedPoints_ptr_->points[i].z < (centroid[2] + 0.05))) {
-            pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
+        //if(((centroid[2] - 0.05) < pclTransformedSelectedPoints_ptr_->points[i].z) && (pclTransformedSelectedPoints_ptr_->points[i].z < (centroid[2] + 0.05))) {
+        //    pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformedSelectedPoints_ptr_->points[i].getVector3fMap();
+        //    count++;
+        //}
+
+        if(((centroid[2] - 0.1) < pclTransformed_ptr_->points[i].z) && (pclTransformed_ptr_->points[i].z < (centroid[2] + 0.1))) {
+            pclGenPurposeCloud_ptr_->points[count].getVector3fMap() = pclTransformed_ptr_->points[i].getVector3fMap();
             count++;
         }
+
+        //pclTransformed_ptr_
     }
 }
 
