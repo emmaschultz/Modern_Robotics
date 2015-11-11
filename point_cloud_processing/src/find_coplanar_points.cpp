@@ -5,44 +5,49 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "coplanar_points");
     ros::NodeHandle nh;
-    
+
     // create instance of cwru_pcl_utils library
     // when this is instantiated, it initializes necessary subscribers (ex: subscriber to selected rviz points)
     MyPclUtils pcl_utils(&nh);
-    
+
     // wait for a point cloud
-    while(!pcl_utils.got_kinect_cloud()){
-    	ROS_INFO("did not receive point cloud yet.");
-    	ros::spinOnce();
-    	ros::Duration(1.0).sleep();
+    while (!pcl_utils.got_kinect_cloud())
+    {
+        ROS_INFO("did not receive point cloud yet.");
+        ros::spinOnce();
+        ros::Duration(1.0).sleep();
     }
 
     ROS_INFO("Got a point cloud. Now saving point cloud.");
     pcl_utils.save_kinect_snapshot();
     pcl_utils.save_kinect_clr_snapshot();
-    
+
     // create a publisher of point clouds
     // this will publish all coplanar points so they can be seen in rviz
     ros::Publisher pubCloud = nh.advertise<sensor_msgs::PointCloud2>("/pcl_cloud_display", 1);
 
-    pcl::PointCloud<pcl::PointXYZ> display_cloud; // this is the data type that will be published
-    sensor_msgs::PointCloud2 pcl2_display_cloud;  // this will be used in the ROS message
+    pcl::PointCloud<pcl::PointXYZ> display_cloud;  // this is the data type that will be published
+    sensor_msgs::PointCloud2 pcl2_display_cloud;   // this will be used in the ROS message
 
     tf::StampedTransform tf_sensor_frame_to_torso_frame;  // use this to transform from sensor to torso frame
     tf::TransformListener tf_listener;
 
     bool tferr = true;
     ROS_INFO("waiting for tf between kinect_pc_frame and torso...");
-    while(tferr){
-    	tferr = false;
-    	try {
-    		tf_listener.lookupTransform("torso", "kinect_pc_frame", ros::Time(0), tf_sensor_frame_to_torso_frame);
-    	} catch(tf::TransformException &exception) {
+    while (tferr)
+    {
+        tferr = false;
+        try
+        {
+            tf_listener.lookupTransform("torso", "kinect_pc_frame", ros::Time(0), tf_sensor_frame_to_torso_frame);
+        }
+        catch (tf::TransformException &exception)
+        {
             ROS_ERROR("%s", exception.what());
-    		tferr = true;
-    		ros::Duration(0.5).sleep();
-    		ros::spinOnce();
-    	}
+            tferr = true;
+            ros::Duration(0.5).sleep();
+            ros::spinOnce();
+        }
     }
 
     ROS_INFO("tf is good.");
@@ -58,9 +63,10 @@ int main(int argc, char** argv)
     Eigen::Vector3f plane_normal;
     double plane_dist;
     ROS_INFO("waiting for selected points...");
-    while(ros::ok()) {
-        if(pcl_utils.got_selected_points()) {
-
+    while (ros::ok())
+    {
+        if (pcl_utils.got_selected_points())
+        {
             pcl_utils.transform_selected_points_cloud(A_sensor_wrt_torso);
 
             pcl_utils.reset_got_selected_points();
