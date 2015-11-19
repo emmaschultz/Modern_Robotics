@@ -1,13 +1,8 @@
 <launch>
 <!-- assume either baxter_gazebo or real baxter is running  /-->
-<!-- in either case, the robot model should be loaded on the parameter server before this launch file is run -->
-
-<!-- launch gazebo simulation -->
-<include file ="$(find cwru_baxter_sim)/baxter_world.launch"/>
 
 <!-- enable the robot for motion commands-->
 <node pkg="baxter_tools" type = "enable_robot.py" name="enable_robot" args="-e"/>
-
 
 <!-- after robot is running and enabled, start up these nodes -->
 <!-- tool transform publisher -->
