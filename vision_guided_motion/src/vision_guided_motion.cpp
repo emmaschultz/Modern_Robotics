@@ -121,37 +121,52 @@ int main(int argc, char** argv) {
                 //send command to execute planned motion
                 rtn_val=arm_motion_commander.rt_arm_execute_planned_path();
 
-
-
-
-
-
-                // use origin_des[0] to change the x-axis value
-                // copy same if statement syntax as previously used
+                /* New code added to enable wiping motion */
                 geometry_msgs::PoseStamped rt_tool_wipe_table;
-                origin_des[0] += 1.0;
+                origin_des[1] += 0.1;
                 Affine_des_gripper.translation() = origin_des;
                 rt_tool_wipe_table.pose = arm_motion_commander.transformEigenAffine3dToPose(Affine_des_gripper);
 
                 rtn_val = arm_motion_commander.rt_arm_plan_path_current_to_goal_pose(rt_tool_wipe_table);
                 if (rtn_val == cwru_action::cwru_baxter_cart_moveResult::SUCCESS){
                 	rtn_val = arm_motion_commander.rt_arm_execute_planned_path();
+                } else {
+                	ROS_WARN("Cartesian path to desired pose not achievable");
                 }
 
-                origin_des[0] -= 2.0;
+                origin_des[1] -= 0.2;
                 Affine_des_gripper.translation() = origin_des;
                 rt_tool_wipe_table.pose = arm_motion_commander.transformEigenAffine3dToPose(Affine_des_gripper);
 
                 rtn_val = arm_motion_commander.rt_arm_plan_path_current_to_goal_pose(rt_tool_wipe_table);
                 if (rtn_val == cwru_action::cwru_baxter_cart_moveResult::SUCCESS){
                 	rtn_val = arm_motion_commander.rt_arm_execute_planned_path();
+                } else {
+                	ROS_WARN("Cartesian path to desired pose not achievable");
                 }
 
+                origin_des[1] += 0.2;
+                Affine_des_gripper.translation() = origin_des;
+                rt_tool_wipe_table.pose = arm_motion_commander.transformEigenAffine3dToPose(Affine_des_gripper);
 
+                rtn_val = arm_motion_commander.rt_arm_plan_path_current_to_goal_pose(rt_tool_wipe_table);
+                if (rtn_val == cwru_action::cwru_baxter_cart_moveResult::SUCCESS){
+                	rtn_val = arm_motion_commander.rt_arm_execute_planned_path();
+                } else {
+                	ROS_WARN("Cartesian path to desired pose not achievable");
+                }
 
+                origin_des[1] -= 0.1;
+                Affine_des_gripper.translation() = origin_des;
+                rt_tool_wipe_table.pose = arm_motion_commander.transformEigenAffine3dToPose(Affine_des_gripper);
 
-
-
+                rtn_val = arm_motion_commander.rt_arm_plan_path_current_to_goal_pose(rt_tool_wipe_table);
+                if (rtn_val == cwru_action::cwru_baxter_cart_moveResult::SUCCESS){
+                	rtn_val = arm_motion_commander.rt_arm_execute_planned_path();
+                } else {
+                	ROS_WARN("Cartesian path to desired pose not achievable");
+                }
+                /* end of new code */
             }
             else {
                 ROS_WARN("Cartesian path to desired pose not achievable");
